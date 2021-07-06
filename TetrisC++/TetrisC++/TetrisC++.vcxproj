@@ -139,15 +139,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BlockManager.cpp" />
     <ClCompile Include="Draw.cpp" />
     <ClCompile Include="Tetris.cpp" />
     <ClCompile Include="MainGame.cpp" />
-    <ClCompile Include="Block.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BlockManager.h" />
     <ClInclude Include="defineHeader.h" />
     <ClInclude Include="Draw.h" />
+    <ClInclude Include="Key.h" />
     <ClInclude Include="Tetris.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

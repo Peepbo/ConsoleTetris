@@ -1,4 +1,6 @@
 #include "Tetris.h"
+#include "conio.h"
+#include "Key.h"
 
 void Tetris::Start()
 {
@@ -8,8 +10,17 @@ void Tetris::Start()
 
 void Tetris::Update()
 {
+	char key = 'N';
 	while (true)
 	{
+		// input
+		if (_kbhit()) key = _getch();
+
+		printf("%c\n", key);
+
+		Test(key);
+
+		// output
 		draw.Display(matrix);
 		draw.ClearScreen();
 	}
@@ -26,4 +37,9 @@ void Tetris::InitMatrix()
 			matrix[i].emplace_back(0);
 		}
 	}
+}
+
+void Tetris::Test(char ch)
+{
+	blockMng.ChangeMatrix(matrix, blockMng.GetBlock(BlockManager::BlockKind(ch - '1')), point);
 }

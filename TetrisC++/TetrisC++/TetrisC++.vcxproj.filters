@@ -18,13 +18,13 @@
     <ClCompile Include="MainGame.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Block.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Draw.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Tetris.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="BlockManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,5 +38,14 @@
     <ClInclude Include="Tetris.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Key.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

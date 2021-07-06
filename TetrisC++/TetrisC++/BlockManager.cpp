@@ -1,12 +1,6 @@
-#include <vector>
-#include "defineHeader.h"
+#include "BlockManager.h"
 
-enum class BlockKind
-{
-	I,L,J,T,O,S,Z
-};
-
-vvi GetBlock(BlockKind kind)
+vvi BlockManager::GetBlock(BlockKind kind)
 {
 	switch (kind)
 	{
@@ -52,6 +46,22 @@ vvi GetBlock(BlockKind kind)
 				 {0,0,0,0} ,
 				 {0,0,0,0} };
 		break;
+	default:
+		return { {0,0,0,0},
+				 {0,0,0,0} ,
+				 {0,0,0,0} ,
+				 {0,0,0,0} };
+		break;
 	}
-	return { {} };
+}
+
+void BlockManager::ChangeMatrix(vvi& matrix, vvi kind, Point point)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			matrix[point.y + i][point.x + j] = kind[i][j];
+		}
+	}
 }

@@ -28,7 +28,10 @@ void Draw::Display(const vvi& matrix)
 	{
 		for (int j = 0; j < X_SIZE; j++)
 		{
-			std::cout << matrix[i][j] << ' ';
+			if (matrix[i][j] == 0)
+				std::cout << "бр";
+			else
+				std::cout << "бс";
 		}
 
 		std::cout << '\n';
