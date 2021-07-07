@@ -9,6 +9,11 @@ void BlockManager::Init()
 
 	blockIndex = 0;
 	blockKind = BlockKind::I;
+	
+	nowBlock.push_back({ 0,0 });
+	nowBlock.push_back({ 0,1 });
+	nowBlock.push_back({ 0,2 });
+	nowBlock.push_back({ 0,3 });
 }
 
 void BlockManager::BlockMapInit()
@@ -144,28 +149,88 @@ void BlockManager::ChangeMatrix(vvi& matrix, const Point& point)
 
 	for (int i = 0; i < 4; i++)
 	{
+		if ((point.y + i) == Y_SIZE)break;
+
 		for (int j = 0; j < 4; j++)
 		{
-			matrix[point.y + i][point.x + j] = kind[i][j];
+			if ((point.x + j) == X_SIZE)break;
+
+			if (kind[i][j] == 1)
+				matrix[point.y + i][point.x + j] = 1;
 		}
 	}
 }
 
-void BlockManager::Rotate(const char& arrow, vvi& matrix, const Point& point)
+void BlockManager::Move(const char& arrow, vvi& matrix, Point& point)
+{
+	std::string write;
+
+	write += blockChar[(int)blockKind];
+	write += (char)blockIndex;
+
+	for (const auto& it : nowBlock)
+	{
+		matrix[it.y + point.y][it.x + point.x] = 0;
+	}
+
+	switch (arrow)
+	{
+	case LEFT:
+		if (point.x > 0)
+		{
+			bool can = true;
+
+			for (const auto& it : nowBlock)
+			{
+				if (matrix[it.y + point.y][it.x + point.x - 1] == 1)
+				{
+					can = false;
+					break;
+				}
+			}
+
+			if(can) 
+				point.x--;
+		}
+		break;
+	case RIGHT:
+		if (point.x < X_SIZE - 1)
+		{
+			bool can = true;
+
+			for (const auto& it : nowBlock)
+			{
+				if (matrix[it.y + point.y][it.x + point.x + 1] == 1)
+				{
+					can = false;
+					break;
+				}
+			}
+
+			if(can) 
+				point.x++;
+		}
+		break;
+	}
+
+	ChangeMatrix(matrix, point);
+}
+
+void BlockManager::Rotate(const char& command, vvi& matrix, const Point& point)
 {
 	std::string write;
 
 	write += blockChar[(int)blockKind];
 
-	switch (arrow)
+	switch (command)
 	{
-	case LEFT:
+	case ROTATE_R:
 		if (blockIndex == 0)
 			blockIndex = maxIndexMap[blockKind];
 		else
 			blockIndex--;
 		break;
-	case RIGHT:
+	case ROTATE_L:
 		if (blockIndex == maxIndexMap[blockKind])
 			blockIndex = 0;
 		else

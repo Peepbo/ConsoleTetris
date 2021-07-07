@@ -13,6 +13,8 @@ public:
 	std::unordered_map < std::string, vvi> blockMap;
 	std::unordered_map < BlockKind, int> maxIndexMap;
 
+	std::vector<Point> nowBlock;
+
 	char blockChar[7]{ 'I','L','J','T','O','S','Z' };
 
 	BlockKind blockKind;
@@ -25,6 +27,8 @@ public:
 
 	vvi GetBlock();
 	void ChangeMatrix(vvi& matrix, const Point& point);
-	void Rotate(const char& arrow, vvi& matrix, const Point& point);
+
+	void Move(const char& arrow, vvi& matrix, Point& point);
+	void Rotate(const char& command, vvi& matrix, const Point& point);
 };
 
