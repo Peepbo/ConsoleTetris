@@ -10,7 +10,8 @@ public:
 	void Update();
 	
 	void InitMatrix();
-	void NextTime() { time += timeValue; }
+	void NextTime();
+	void FallDown();
 private:
 	Draw draw;
 	BlockManager blockMng;
