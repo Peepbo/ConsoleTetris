@@ -7,5 +7,5 @@ struct Point
 };
 
 #define vvi std::vector<std::vector<int>>
-#define Y_SIZE 15
+#define Y_SIZE 20
 #define X_SIZE 10

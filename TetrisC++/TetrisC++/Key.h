@@ -7,3 +7,10 @@
 
 #define ROTATE_R 'X'
 #define ROTATE_L 'Z'
+
+#define ROTATE_L_SMALL 'z'
+#define ROTATE_L_BIG 'Z'
+
+#define ROTATE_R_SMALL 'x'
+#define ROTATE_R_BIG 'X'
+

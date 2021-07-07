@@ -19,10 +19,22 @@ void Tetris::Update()
 		if (_kbhit()) key = _getch();
 		else key = ' ';
 
-		if (key == LEFT || key == RIGHT)
+		switch (key)
+		{
+		case LEFT:
+		case RIGHT:
 			blockMng.Move(key, matrix, point);
-		else
+			break;
+		case ROTATE_L_SMALL:
+		case ROTATE_L_BIG:
+		case ROTATE_R_SMALL:
+		case ROTATE_R_BIG:
+			blockMng.Rotate(key, matrix, point);
+			break;
+		default:
 			blockMng.ChangeMatrix(matrix, point);
+			break;
+		}
 
 		// only test
 		if (key == '+')
@@ -133,7 +145,7 @@ void Tetris::FallDown()
 		for (int i = 0; i < 4; i++)
 		{
 			if ((point.y + i) == Y_SIZE)break;
-		
+
 			vvi temp = blockMng.blockMap[key];
 			for (int j = 0; j < 4; j++)
 			{

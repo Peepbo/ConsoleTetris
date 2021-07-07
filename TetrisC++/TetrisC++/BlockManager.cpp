@@ -218,19 +218,27 @@ void BlockManager::Move(const char& arrow, vvi& matrix, Point& point)
 
 void BlockManager::Rotate(const char& command, vvi& matrix, const Point& point)
 {
+	for (const auto& it : nowBlock)
+	{
+		matrix[it.y + point.y][it.x + point.x] = 0;
+	}
+
 	std::string write;
 
 	write += blockChar[(int)blockKind];
 
 	switch (command)
 	{
-	case ROTATE_R:
+	case ROTATE_L_SMALL:
+	case ROTATE_L_BIG:
 		if (blockIndex == 0)
 			blockIndex = maxIndexMap[blockKind];
 		else
 			blockIndex--;
 		break;
-	case ROTATE_L:
+
+	case ROTATE_R_SMALL:
+	case ROTATE_R_BIG:
 		if (blockIndex == maxIndexMap[blockKind])
 			blockIndex = 0;
 		else
@@ -241,4 +249,22 @@ void BlockManager::Rotate(const char& command, vvi& matrix, const Point& point)
 	write += (char)blockIndex;
 
 	ChangeMatrix(matrix, point);
+
+	//nowBlock change
+	nowBlock.clear();
+	write.clear();
+
+	write += blockChar[(int)blockKind];
+	write += (char)blockIndex;
+
+	const vvi temp = blockMap[write];
+
+	for (int y = 0; y < 4; y++)
+	{
+		for (int x = 0; x < 4; x++)
+		{
+			if (temp[y][x] == 1)
+				nowBlock.push_back({ x,y }); // x,y ¼ø¼­
+		}
+	}
 }
