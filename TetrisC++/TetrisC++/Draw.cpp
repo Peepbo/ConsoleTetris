@@ -10,7 +10,7 @@ void Draw::ClearScreen()
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
 }
 
-void Draw::ShowConsoleCursor(bool showFlag)
+void Draw::ShowConsoleCursor(const bool& showFlag)
 {
 	HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -21,7 +21,7 @@ void Draw::ShowConsoleCursor(bool showFlag)
 	SetConsoleCursorInfo(out, &cursorInfo);
 }
 
-void Draw::Display(const vvi& matrix)
+void Draw::Display(const vvi& matrix, const float& time)
 {
 	//matrix
 	for (int i = 0; i < Y_SIZE; i++)
@@ -38,5 +38,5 @@ void Draw::Display(const vvi& matrix)
 	}
 
 	//time
-	std::cout << (time += 0.01f);
+	std::cout << time;
 }
