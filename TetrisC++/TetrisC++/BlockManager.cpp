@@ -200,6 +200,12 @@ void BlockManager::Move(const char& arrow, vvi& matrix, Point& point)
 
 			for (const auto& it : nowBlock)
 			{
+				if (it.x + point.x + 1 == X_SIZE)
+				{
+					can = false;
+					break;
+				}
+
 				if (matrix[it.y + point.y][it.x + point.x + 1] == 1)
 				{
 					can = false;
@@ -218,14 +224,55 @@ void BlockManager::Move(const char& arrow, vvi& matrix, Point& point)
 
 void BlockManager::Rotate(const char& command, vvi& matrix, const Point& point)
 {
+	//회전이 안되는 예외처리
+	//1. 겹치거나 화면밖으로 넘어가는 것을 방지
+	std::string before;
+	before += blockChar[(int)blockKind];
+	before += (char)blockIndex;
+
+	std::string after;
+	after += blockChar[(int)blockKind];
+	int tempIndex = blockIndex;
+	switch (command)
+	{
+	case ROTATE_L_SMALL:
+	case ROTATE_L_BIG:
+		if (tempIndex == 0)
+			tempIndex = maxIndexMap[blockKind];
+		else
+			tempIndex--;
+		break;
+
+	case ROTATE_R_SMALL:
+	case ROTATE_R_BIG:
+		if (tempIndex == maxIndexMap[blockKind])
+			tempIndex = 0;
+		else
+			tempIndex++;
+		break;
+	}
+
+	after += (char)tempIndex;
+
+	const std::vector<Point> vp = RotateCheck(blockMap[before], blockMap[after]);
+
+	for (const Point& tempPoint : vp)
+	{
+		//y범위를 넘어가는 경우
+		if (tempPoint.y + point.y < 0 || tempPoint.y + point.y == Y_SIZE)return;
+		//x범위를 넘어가는 경우
+		if (tempPoint.x + point.x < 0 || tempPoint.x + point.x == X_SIZE)return;
+		//겹치는 경우
+		if (matrix[tempPoint.y + point.y][tempPoint.x + point.x] == 1)return;
+	}
+
+	//여기까지 왔다면 위에서 반환이 안된 상태, 블록을 돌려주면 된다.
+
+	//
 	for (const auto& it : nowBlock)
 	{
 		matrix[it.y + point.y][it.x + point.x] = 0;
 	}
-
-	std::string write;
-
-	write += blockChar[(int)blockKind];
 
 	switch (command)
 	{
@@ -246,13 +293,11 @@ void BlockManager::Rotate(const char& command, vvi& matrix, const Point& point)
 		break;
 	}
 
-	write += (char)blockIndex;
-
 	ChangeMatrix(matrix, point);
 
 	//nowBlock change
 	nowBlock.clear();
-	write.clear();
+	std::string write;
 
 	write += blockChar[(int)blockKind];
 	write += (char)blockIndex;
@@ -267,4 +312,21 @@ void BlockManager::Rotate(const char& command, vvi& matrix, const Point& point)
 				nowBlock.push_back({ x,y }); // x,y 순서
 		}
 	}
+}
+
+std::vector<Point> BlockManager::RotateCheck(const vvi& before, const vvi& after)
+{
+	std::vector<Point> output;
+
+	for (int y = 0; y < 4; y++)
+	{
+		for (int x = 0; x < 4; x++)
+		{
+			//a에 겹치지 않는 b의 부분
+			if (before[y][x] == 0 && after[y][x] == 1)
+				output.push_back({ x,y });
+		}
+	}
+
+	return output;
 }

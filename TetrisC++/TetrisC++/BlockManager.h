@@ -30,5 +30,7 @@ public:
 
 	void Move(const char& arrow, vvi& matrix, Point& point);
 	void Rotate(const char& command, vvi& matrix, const Point& point);
+
+	std::vector<Point> RotateCheck(const vvi& before, const vvi& after);
 };
 
