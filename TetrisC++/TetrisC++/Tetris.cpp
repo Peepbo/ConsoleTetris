@@ -1,11 +1,13 @@
 #include "Tetris.h"
 #include "conio.h"
 #include "Key.h"
+#include <iostream>
 
 void Tetris::Start()
 {
 	draw.ShowConsoleCursor(false);
 	InitMatrix();
+	blockMng.Init();
 }
 
 void Tetris::Update()
@@ -15,14 +17,24 @@ void Tetris::Update()
 	{
 		// input
 		if (_kbhit()) key = _getch();
+		else key = ' ';
 
-		printf("%c\n", key);
-
-		Test(key);
+		if (key == LEFT || key == RIGHT)
+			blockMng.Rotate(key, matrix, point);
+		else if (key - '1' >= 0 && key - '1' <= 6) // only test
+		{
+			blockMng.blockKind = BlockManager::BlockKind(key - '1');
+			blockMng.blockIndex = 0;
+			blockMng.ChangeMatrix(matrix, point);
+		}
+		else
+			blockMng.ChangeMatrix(matrix, point);
 
 		// output
-		draw.Display(matrix);
+		draw.Display(matrix, time);
 		draw.ClearScreen();
+
+		NextTime();
 	}
 }
 
@@ -37,9 +49,4 @@ void Tetris::InitMatrix()
 			matrix[i].emplace_back(0);
 		}
 	}
-}
-
-void Tetris::Test(char ch)
-{
-	blockMng.ChangeMatrix(matrix, blockMng.GetBlock(BlockManager::BlockKind(ch - '1')), point);
 }

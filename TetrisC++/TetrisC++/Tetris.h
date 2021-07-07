@@ -10,13 +10,15 @@ public:
 	void Update();
 	
 	void InitMatrix();
-	
-	void Test(char ch);
+	void NextTime() { time += timeValue; }
 private:
 	Draw draw;
-	Point point{ 4,0 };
 	BlockManager blockMng;
 
+	Point point{ 4,0 };
+
 	vvi matrix;
+
+	float time = 0.0f, timeValue = 0.01f;
 };
 
