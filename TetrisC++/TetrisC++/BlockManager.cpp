@@ -118,17 +118,6 @@ void BlockManager::BlockMapInit()
 						{0,0,0,0} } });
 }
 
-vvi BlockManager::GetBlock()
-{
-	blockIndex = 0;
-
-	std::string key;
-	key += blockChar[(int)blockKind];
-	key += (char)blockIndex;
-
-	return blockMap[key];
-}
-
 void BlockManager::AddBlockMap(BlockKind kind, std::vector<vvi> blocks)
 {
 	int blockIndex = 0;
@@ -165,38 +154,37 @@ void BlockManager::ApplyToMatrix(vvi& matrix, const Point& point)
 	}
 }
 
+void BlockManager::RemoveBlock(vvi& matrix, const Point& point)
+{
+	for (const Point& ptr : nowBlock)
+	{
+		matrix[ptr.y + point.y][ptr.x + point.x] = 0;
+	}
+}
+
 void BlockManager::Move(const char& arrow, vvi& matrix, Point& point)
 {
-	bool isMove = true;
-
 	switch (arrow)
 	{
 	case LEFT:
 		//경계선 일 때
-		if (point.x == 0)break;
+		if (point.x == 0)
+			return;
 
 		//왼쪽에 블록이 있을 때
 		for (const Point& ptr : leftCollisionBlock)
 		{
 			if (matrix[ptr.y + point.y][ptr.x + point.x - 1] == 1)
-			{
-				isMove = false;
-				break;
-			}
+				return;
 		}
 
-		//움직일 수 있을 때
-		if (isMove)
-		{
-			//원래 자리에 있던 블록을 지우고
-			for (const Point& ptr : nowBlock)
-			{
-				matrix[ptr.y + point.y][ptr.x + point.x] = 0;
-			}
+		//움직일 수 있을 때 여기까지 옴
 
-			//위치 이동
-			point.x--;
-		}
+		//원래 자리에 있던 블록을 지우고
+		RemoveBlock(matrix, point);
+
+		//위치 이동
+		point.x--;
 
 		break;
 	case RIGHT:
@@ -204,30 +192,19 @@ void BlockManager::Move(const char& arrow, vvi& matrix, Point& point)
 		for (const Point& ptr : rightCollisionBlock)
 		{
 			if (ptr.x + point.x == X_SIZE - 1)
-			{
-				isMove = false;
-				break;
-			}
+				return;
 
 			if (matrix[ptr.y + point.y][ptr.x + point.x + 1] == 1)
-			{
-				isMove = false;
-				break;
-			}
+				return;
 		}
 
-		//움직일 수 있을 때
-		if (isMove)
-		{
-			//원래 자리에 있던 블록을 지우고
-			for (const Point& ptr : nowBlock)
-			{
-				matrix[ptr.y + point.y][ptr.x + point.x] = 0;
-			}
+		//움직일 수 있을 때 여기까지 옴
+			
+		//원래 자리에 있던 블록을 지우고
+		RemoveBlock(matrix, point);
 
-			//위치 이동
-			point.x++;
-		}
+		//위치 이동
+		point.x++;
 
 		break;
 	}
@@ -235,8 +212,12 @@ void BlockManager::Move(const char& arrow, vvi& matrix, Point& point)
 
 void BlockManager::Rotate(const char& command, vvi& matrix, const Point& point)
 {
-	//회전이 안되는 예외처리
-	//1. 겹치거나 화면밖으로 넘어가는 것을 방지
+	/*
+	* 회전이 안되는 경우
+	* 
+	* 1. 블록이 화면밖으로 넘어갈 때
+	* 2. 블록이 다른 블록과 겹치는 부분이 생길 때
+	*/
 	std::string before;
 	before += blockChar[(int)blockKind];
 	before += (char)blockIndex;
@@ -265,9 +246,9 @@ void BlockManager::Rotate(const char& command, vvi& matrix, const Point& point)
 
 	after += (char)afterIndex;
 
-	const std::vector<Point> vp = RotateCheck(blockMap[before], blockMap[after]);
+	const pointVector inspectionPoints = InspectionPointWhenRotating(blockMap[before], blockMap[after]);
 
-	for (const Point& tempPoint : vp)
+	for (const Point& tempPoint : inspectionPoints)
 	{
 		//y범위를 넘어가는 경우
 		if (tempPoint.y + point.y < 0 || tempPoint.y + point.y == Y_SIZE)return;
@@ -280,10 +261,7 @@ void BlockManager::Rotate(const char& command, vvi& matrix, const Point& point)
 	//여기까지 왔다면 위에서 반환이 안된 상태, 블록을 돌려주면 된다.
 
 	//이전에 그려진 블록들을 지워준다.
-	for (const auto& it : nowBlock)
-	{
-		matrix[it.y + point.y][it.x + point.x] = 0;
-	}
+	RemoveBlock(matrix, point);
 
 	//nowBlock change
 	BlockUpdate(blockKind, afterIndex);
@@ -291,9 +269,9 @@ void BlockManager::Rotate(const char& command, vvi& matrix, const Point& point)
 	ApplyToMatrix(matrix, point);
 }
 
-std::vector<Point> BlockManager::RotateCheck(const vvi& before, const vvi& after)
+std::vector<Point> BlockManager::InspectionPointWhenRotating(const vvi& before, const vvi& after)
 {
-	std::vector<Point> output;
+	std::vector<Point> InspectionPoint;
 
 	for (int y = 0; y < 4; y++)
 	{
@@ -301,11 +279,11 @@ std::vector<Point> BlockManager::RotateCheck(const vvi& before, const vvi& after
 		{
 			//a에 겹치지 않는 b의 부분
 			if (before[y][x] == 0 && after[y][x] == 1)
-				output.push_back({ x,y });
+				InspectionPoint.push_back({ x,y });
 		}
 	}
 
-	return output;
+	return InspectionPoint;
 }
 
 /*

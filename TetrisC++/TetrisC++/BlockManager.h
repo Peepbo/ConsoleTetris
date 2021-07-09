@@ -28,13 +28,13 @@ public:
 
 	void AddBlockMap(BlockKind kind, std::vector<vvi> blocks);
 
-	vvi GetBlock();
 	void ApplyToMatrix(vvi& matrix, const Point& point);
+	void RemoveBlock(vvi& matrix, const Point& point);
 
 	void Move(const char& arrow, vvi& matrix, Point& point);
 	void Rotate(const char& command, vvi& matrix, const Point& point);
 
-	pointVector RotateCheck(const vvi& before, const vvi& after);
+	pointVector InspectionPointWhenRotating(const vvi& before, const vvi& after);
 
 	void BlockUpdate(BlockKind kind, int index);
 	void CollisionBlockUpdate();
