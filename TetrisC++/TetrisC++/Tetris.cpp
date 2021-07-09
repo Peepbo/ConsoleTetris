@@ -77,34 +77,26 @@ void Tetris::NextTime()
 
 void Tetris::FallDown()
 {
-	bool fallDown = true;
-
 	for (const Point& ptr : blockMng.downCollisionBlock)
 	{
 		if (ptr.y + point.y == Y_SIZE - 1)
 		{
-			fallDown = false;
-			break;
+			point = { 4,0 };
+			return;
 		}
 
 		if (matrix[ptr.y + point.y + 1][ptr.x + point.x] == 1)
 		{
-			fallDown = false;
-			break;
+			point = { 4,0 };
+			return;
 		}
 	}
 
-	if (fallDown)
+	//여기까지 왔다면 바닥으로 내려가도 되는 경우
+	for (const Point& ptr : blockMng.nowBlock)
 	{
-		for (const Point& ptr : blockMng.nowBlock)
-		{
-			matrix[ptr.y + point.y][ptr.x + point.x] = 0;
-		}
-
-		point.y++;
+		matrix[ptr.y + point.y][ptr.x + point.x] = 0;
 	}
-	else
-		point = { 4,0 };
-	
 
+	point.y++;
 }
