@@ -9,109 +9,113 @@ void BlockManager::Init()
 
 	blockIndex = 0;
 	blockKind = BlockKind::I;
-	
-	nowBlock.push_back({ 0,0 });
-	nowBlock.push_back({ 0,1 });
-	nowBlock.push_back({ 0,2 });
-	nowBlock.push_back({ 0,3 });
+
+	BlockUpdate(blockKind, blockIndex);
 }
 
 void BlockManager::BlockMapInit()
 {
-	AddBlockMap(BlockKind::I, { { {1,0,0,0},
-						  {1,0,0,0},
-						  {1,0,0,0},
-						  {1,0,0,0} },
+	AddBlockMap(BlockKind::I, { {
+						{1,0,0,0},
+						{1,0,0,0},
+						{1,0,0,0},
+						{1,0,0,0} },
+						{
+						{1,1,1,1},
+						{0,0,0,0},
+						{0,0,0,0},
+						{0,0,0,0} } });
 
-						{ {1,1,1,1},
-						  {0,0,0,0},
-						  {0,0,0,0},
-						  {0,0,0,0} } });
+	AddBlockMap(BlockKind::L, { {
+						{1,0,0,0},
+						{1,0,0,0},
+						{1,1,0,0},
+						{0,0,0,0} },
+						{
+						{1,1,1,0},
+						{1,0,0,0},
+						{0,0,0,0},
+						{0,0,0,0} },
+						{
+						{1,1,0,0},
+						{0,1,0,0},
+						{0,1,0,0},
+						{0,0,0,0} },
+						{
+						{0,0,1,0},
+						{1,1,1,0},
+						{0,0,0,0},
+						{0,0,0,0} } });
 
-	AddBlockMap(BlockKind::L, { { {1,0,0,0},
-							  {1,0,0,0},
-							  {1,1,0,0},
-							  {0,0,0,0} },
+	AddBlockMap(BlockKind::J, { {
+						{0,1,0,0},
+						{0,1,0,0},
+						{1,1,0,0},
+						{0,0,0,0} },
+						{ 
+						{1,0,0,0},
+						{1,1,1,0},
+						{0,0,0,0},
+						{0,0,0,0} },
+						{ 
+						{1,1,0,0},
+						{1,0,0,0},
+						{1,0,0,0},
+						{0,0,0,0} },
+						{ 
+						{1,1,1,0},
+						{0,0,1,0},
+						{0,0,0,0},
+						{0,0,0,0} } });
 
-							{ {1,1,1,0},
-							  {1,0,0,0},
-							  {0,0,0,0},
-							  {0,0,0,0} },
+	AddBlockMap(BlockKind::T, { { 
+						{0,0,0,0},
+						{1,1,1,0},
+						{0,1,0,0},
+						{0,0,0,0} },
+						{ 
+						{0,1,0,0},
+						{1,1,0,0},
+						{0,1,0,0},
+						{0,0,0,0} },
+						{ 
+						{0,1,0,0},
+						{1,1,1,0},
+						{0,0,0,0},
+						{0,0,0,0} },
+						{ 
+						{0,1,0,0},
+						{0,1,1,0},
+						{0,1,0,0},
+						{0,0,0,0} } });
 
-							{ {1,1,0,0},
-							  {0,1,0,0},
-							  {0,1,0,0},
-							  {0,0,0,0} },
+	AddBlockMap(BlockKind::O, { {
+						{1,1,0,0},
+						{1,1,0,0},
+						{0,0,0,0},
+						{0,0,0,0} } });
 
-							{ {0,0,1,0},
-							  {1,1,1,0},
-							  {0,0,0,0},
-							  {0,0,0,0} } });
+	AddBlockMap(BlockKind::S, { {
+						{0,1,1,0},
+						{1,1,0,0},
+						{0,0,0,0},
+						{0,0,0,0} },
+						{ 
+						{1,0,0,0},
+						{1,1,0,0},
+						{0,1,0,0},
+						{0,0,0,0} } });
 
-	AddBlockMap(BlockKind::J, { { {0,1,0,0},
-							  {0,1,0,0},
-							  {1,1,0,0},
-							  {0,0,0,0} },
-
-							{ {1,0,0,0},
-							  {1,1,1,0},
-							  {0,0,0,0},
-							  {0,0,0,0} },
-
-							{ {1,1,0,0},
-							  {1,0,0,0},
-							  {1,0,0,0},
-							  {0,0,0,0} },
-
-							{ {1,1,1,0},
-							  {0,0,1,0},
-							  {0,0,0,0},
-							  {0,0,0,0} } });
-
-	AddBlockMap(BlockKind::T, { { {0,0,0,0},
-							  {1,1,1,0},
-							  {0,1,0,0},
-							  {0,0,0,0} },
-
-							{ {0,1,0,0},
-							  {1,1,0,0},
-							  {0,1,0,0},
-							  {0,0,0,0} },
-
-							{ {0,1,0,0},
-							  {1,1,1,0},
-							  {0,0,0,0},
-							  {0,0,0,0} },
-
-							{ {0,1,0,0},
-							  {0,1,1,0},
-							  {0,1,0,0},
-							  {0,0,0,0} } });
-
-	AddBlockMap(BlockKind::O, { { {1,1,0,0},
-							  {1,1,0,0},
-							  {0,0,0,0},
-							  {0,0,0,0} } });
-
-	AddBlockMap(BlockKind::S, { { {0,1,1,0},
-							  {1,1,0,0},
-							  {0,0,0,0},
-							  {0,0,0,0} },
-
-							{ {1,0,0,0},
-							  {1,1,0,0},
-							  {0,1,0,0},
-							  {0,0,0,0} } });
-
-	AddBlockMap(BlockKind::Z, { { {1,1,0,0},
-								  {0,1,1,0},
-								  {0,0,0,0},
-								  {0,0,0,0} },
-
-							{ {0,1,0,0},
-							  {1,1,0,0},
-							  {1,0,0,0},
-							  {0,0,0,0} } });
+	AddBlockMap(BlockKind::Z, { {
+						{1,1,0,0},
+						{0,1,1,0},
+						{0,0,0,0},
+						{0,0,0,0} },
+						{ 
+						{0,1,0,0},
+						{1,1,0,0},
+						{1,0,0,0},
+						{0,0,0,0} } });
 }
 
 vvi BlockManager::GetBlock()
@@ -140,7 +144,7 @@ void BlockManager::AddBlockMap(BlockKind kind, std::vector<vvi> blocks)
 	maxIndexMap[kind] = blockIndex - 1;
 }
 
-void BlockManager::ChangeMatrix(vvi& matrix, const Point& point)
+void BlockManager::ApplyToMatrix(vvi& matrix, const Point& point)
 {
 	std::string key;
 	key += blockChar[(int)blockKind];
@@ -163,63 +167,70 @@ void BlockManager::ChangeMatrix(vvi& matrix, const Point& point)
 
 void BlockManager::Move(const char& arrow, vvi& matrix, Point& point)
 {
-	std::string write;
-
-	write += blockChar[(int)blockKind];
-	write += (char)blockIndex;
-
-	for (const auto& it : nowBlock)
-	{
-		matrix[it.y + point.y][it.x + point.x] = 0;
-	}
+	bool isMove = true;
 
 	switch (arrow)
 	{
 	case LEFT:
-		if (point.x > 0)
-		{
-			bool can = true;
+		//경계선 일 때
+		if (point.x == 0)break;
 
-			for (const auto& it : nowBlock)
+		//왼쪽에 블록이 있을 때
+		for (const Point& ptr : leftCollisionBlock)
+		{
+			if (matrix[ptr.y + point.y][ptr.x + point.x - 1] == 1)
 			{
-				if (matrix[it.y + point.y][it.x + point.x - 1] == 1)
-				{
-					can = false;
-					break;
-				}
+				isMove = false;
+				break;
+			}
+		}
+
+		//움직일 수 있을 때
+		if (isMove)
+		{
+			//원래 자리에 있던 블록을 지우고
+			for (const Point& ptr : nowBlock)
+			{
+				matrix[ptr.y + point.y][ptr.x + point.x] = 0;
 			}
 
-			if(can) 
-				point.x--;
+			//위치 이동
+			point.x--;
 		}
+
 		break;
 	case RIGHT:
-		if (point.x < X_SIZE - 1)
+		//경계선이거나 오른쪽에 블록이 있을 때
+		for (const Point& ptr : rightCollisionBlock)
 		{
-			bool can = true;
-
-			for (const auto& it : nowBlock)
+			if (ptr.x + point.x == X_SIZE - 1)
 			{
-				if (it.x + point.x + 1 == X_SIZE)
-				{
-					can = false;
-					break;
-				}
-
-				if (matrix[it.y + point.y][it.x + point.x + 1] == 1)
-				{
-					can = false;
-					break;
-				}
+				isMove = false;
+				break;
 			}
 
-			if(can) 
-				point.x++;
+			if (matrix[ptr.y + point.y][ptr.x + point.x + 1] == 1)
+			{
+				isMove = false;
+				break;
+			}
 		}
+
+		//움직일 수 있을 때
+		if (isMove)
+		{
+			//원래 자리에 있던 블록을 지우고
+			for (const Point& ptr : nowBlock)
+			{
+				matrix[ptr.y + point.y][ptr.x + point.x] = 0;
+			}
+
+			//위치 이동
+			point.x++;
+		}
+
 		break;
 	}
-
-	ChangeMatrix(matrix, point);
 }
 
 void BlockManager::Rotate(const char& command, vvi& matrix, const Point& point)
@@ -232,27 +243,27 @@ void BlockManager::Rotate(const char& command, vvi& matrix, const Point& point)
 
 	std::string after;
 	after += blockChar[(int)blockKind];
-	int tempIndex = blockIndex;
+	int afterIndex = blockIndex;
 	switch (command)
 	{
 	case ROTATE_L_SMALL:
 	case ROTATE_L_BIG:
-		if (tempIndex == 0)
-			tempIndex = maxIndexMap[blockKind];
+		if (afterIndex == 0)
+			afterIndex = maxIndexMap[blockKind];
 		else
-			tempIndex--;
+			afterIndex--;
 		break;
 
 	case ROTATE_R_SMALL:
 	case ROTATE_R_BIG:
-		if (tempIndex == maxIndexMap[blockKind])
-			tempIndex = 0;
+		if (afterIndex == maxIndexMap[blockKind])
+			afterIndex = 0;
 		else
-			tempIndex++;
+			afterIndex++;
 		break;
 	}
 
-	after += (char)tempIndex;
+	after += (char)afterIndex;
 
 	const std::vector<Point> vp = RotateCheck(blockMap[before], blockMap[after]);
 
@@ -268,50 +279,16 @@ void BlockManager::Rotate(const char& command, vvi& matrix, const Point& point)
 
 	//여기까지 왔다면 위에서 반환이 안된 상태, 블록을 돌려주면 된다.
 
-	//
+	//이전에 그려진 블록들을 지워준다.
 	for (const auto& it : nowBlock)
 	{
 		matrix[it.y + point.y][it.x + point.x] = 0;
 	}
 
-	switch (command)
-	{
-	case ROTATE_L_SMALL:
-	case ROTATE_L_BIG:
-		if (blockIndex == 0)
-			blockIndex = maxIndexMap[blockKind];
-		else
-			blockIndex--;
-		break;
-
-	case ROTATE_R_SMALL:
-	case ROTATE_R_BIG:
-		if (blockIndex == maxIndexMap[blockKind])
-			blockIndex = 0;
-		else
-			blockIndex++;
-		break;
-	}
-
-	ChangeMatrix(matrix, point);
-
 	//nowBlock change
-	nowBlock.clear();
-	std::string write;
+	BlockUpdate(blockKind, afterIndex);
 
-	write += blockChar[(int)blockKind];
-	write += (char)blockIndex;
-
-	const vvi temp = blockMap[write];
-
-	for (int y = 0; y < 4; y++)
-	{
-		for (int x = 0; x < 4; x++)
-		{
-			if (temp[y][x] == 1)
-				nowBlock.push_back({ x,y }); // x,y 순서
-		}
-	}
+	ApplyToMatrix(matrix, point);
 }
 
 std::vector<Point> BlockManager::RotateCheck(const vvi& before, const vvi& after)
@@ -329,4 +306,81 @@ std::vector<Point> BlockManager::RotateCheck(const vvi& before, const vvi& after
 	}
 
 	return output;
+}
+
+/*
+* 블록의 모양이 바꼈을 때(다른 블록으로 바뀌거나 회전) 실행한다.
+*/
+void BlockManager::BlockUpdate(BlockKind kind, int index)
+{
+	blockKind = kind;
+	blockIndex = index;
+
+	//nowBlock
+	nowBlock.clear();
+
+	std::string key;
+	key += blockChar[(int)blockKind];
+	key += (char)blockIndex;
+
+	vvi block = blockMap[key];
+
+	for (int y = 0; y < 4; y++)
+	{
+		for (int x = 0; x < 4; x++)
+		{
+			if (block[y][x] == 0)continue;
+
+			nowBlock.push_back({ x,y });
+		}
+	}
+
+	CollisionBlockUpdate();
+}
+
+void BlockManager::CollisionBlockUpdate()
+{
+	//leftCollisionBlock, rightCollisionBlock, downCollisionBlock
+	leftCollisionBlock.clear();
+	rightCollisionBlock.clear();
+	downCollisionBlock.clear();
+
+	//variable
+	std::pair<int,int> x_arr[4]{ {4,-1},{4,-1},{4,-1},{4,-1} };// {min,max}
+	int y_arr[4]{ -1,-1,-1,-1 };
+	/*
+	* left, right
+	* y줄에서 가장 큰 x값, 가장 작은 x값을 저장하면 됨
+	* down
+	* x줄에서 가장 큰 y값을 저장하면 됨
+	*/
+
+	//first = min, second = max
+	for (const Point& block : nowBlock)
+	{
+		int x = block.x, y = block.y;
+
+		//min x
+		x_arr[y].first = std::min(x_arr[y].first, x);
+		//max x
+		x_arr[y].second = std::max(x_arr[y].second, x);
+
+		//max y
+		y_arr[x] = std::max(y_arr[x], y);
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		//left
+		if (x_arr[i].first != 4)
+			leftCollisionBlock.push_back({ x_arr[i].first,i });
+
+		//right
+		if (x_arr[i].second != -1)
+			rightCollisionBlock.push_back({ x_arr[i].second,i });
+
+		//down
+		if (y_arr[i] != -1)
+			downCollisionBlock.push_back({ i,y_arr[i] });
+	}
 }
