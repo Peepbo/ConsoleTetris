@@ -105,12 +105,15 @@ void BlockManager::BlockMapInit()
 		{{1,0},{0,1},{1,1},{0,2}}} });
 }
 
-void BlockManager::AddBlockMap(BlockKind kind, std::vector<pointVector> blocks)
+void BlockManager::AddBlockMap(const BlockKind& kind, const std::vector<pointVector>& blocks)
 {
 	int blockIndex = 0;
+	std::string key;
+
 	for (const pointVector& block : blocks)
 	{
-		std::string key;
+		key.clear();
+
 		key += blockChar[(int)kind];
 		key += (char)blockIndex++;
 
@@ -165,8 +168,6 @@ void BlockManager::Move(const char& arrow, vvi& matrix, Point& point)
 		//위치 이동
 		point.x--;
 
-		ApplyToMatrix(matrix, point);
-
 		break;
 	case RIGHT:
 		//경계선이거나 오른쪽에 블록이 있을 때
@@ -187,12 +188,10 @@ void BlockManager::Move(const char& arrow, vvi& matrix, Point& point)
 		//위치 이동
 		point.x++;
 
-		ApplyToMatrix(matrix, point);
-
 		break;
 	}
 
-
+	ApplyToMatrix(matrix, point);
 }
 
 void BlockManager::Rotate(const char& command, vvi& matrix, const Point& point)
@@ -286,7 +285,7 @@ pointVector BlockManager::InspectionPointWhenRotating(const pointVector& before,
 /*
 * 블록의 모양이 바꼈을 때(다른 블록으로 바뀌거나 회전) 실행한다.
 */
-void BlockManager::BlockUpdate(BlockKind kind, int index)
+void BlockManager::BlockUpdate(const BlockKind& kind, const int& index)
 {
 	blockKind = kind;
 	blockIndex = index;

@@ -26,7 +26,7 @@ public:
 	void Init();
 	void BlockMapInit();
 
-	void AddBlockMap(BlockKind kind, std::vector<pointVector> blocks);
+	void AddBlockMap(const BlockKind& kind, const std::vector<pointVector>& blocks);
 
 	void ApplyToMatrix(vvi& matrix, const Point& point);
 	void RemoveBlock(vvi& matrix, const Point& point);
@@ -36,7 +36,7 @@ public:
 
 	pointVector InspectionPointWhenRotating(const pointVector& before, const pointVector& after);
 
-	void BlockUpdate(BlockKind kind, int index);
+	void BlockUpdate(const BlockKind& kind, const int& index);
 	void CollisionBlockUpdate();
 };
 
