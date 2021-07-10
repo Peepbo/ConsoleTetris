@@ -93,10 +93,10 @@ void Tetris::FallDown()
 	}
 
 	//여기까지 왔다면 바닥으로 내려가도 되는 경우
-	for (const Point& ptr : blockMng.nowBlock)
-	{
-		matrix[ptr.y + point.y][ptr.x + point.x] = 0;
-	}
 
+	//원래 자리에 있던 블록을 지우고
+	blockMng.RemoveBlock(matrix, point);
+
+	//밑으로 이동
 	point.y++;
 }
