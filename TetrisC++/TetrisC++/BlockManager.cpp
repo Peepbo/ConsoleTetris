@@ -15,113 +15,100 @@ void BlockManager::Init()
 
 void BlockManager::BlockMapInit()
 {
+	/*
+	* I Block
+	* {1,0,0,0}	{1,1,1,1}
+	* {1,0,0,0}	{0,0,0,0}
+	* {1,0,0,0}	{0,0,0,0}
+	* {1,0,0,0} {0,0,0,0}
+	*/
+
 	AddBlockMap(BlockKind::I, { {
-						{1,0,0,0},
-						{1,0,0,0},
-						{1,0,0,0},
-						{1,0,0,0} },
-						{
-						{1,1,1,1},
-						{0,0,0,0},
-						{0,0,0,0},
-						{0,0,0,0} } });
+		{0,0},{0,1},{0,2},{0,3}},
+		{{0,0},{1,0},{2,0},{3,0}} });
+
+	/*
+	* L Block
+	* {1,0,0,0} {1,1,1,0} {1,1,0,0} {0,0,1,0}
+	* {1,0,0,0} {1,0,0,0} {0,1,0,0} {1,1,1,0}
+	* {1,1,0,0} {0,0,0,0} {0,1,0,0} {0,0,0,0}
+	* {0,0,0,0} {0,0,0,0} {0,0,0,0} {0,0,0,0}
+	*/
 
 	AddBlockMap(BlockKind::L, { {
-						{1,0,0,0},
-						{1,0,0,0},
-						{1,1,0,0},
-						{0,0,0,0} },
-						{
-						{1,1,1,0},
-						{1,0,0,0},
-						{0,0,0,0},
-						{0,0,0,0} },
-						{
-						{1,1,0,0},
-						{0,1,0,0},
-						{0,1,0,0},
-						{0,0,0,0} },
-						{
-						{0,0,1,0},
-						{1,1,1,0},
-						{0,0,0,0},
-						{0,0,0,0} } });
+		{{0,0},{0,1},{0,2},{1,2}},
+		{{0,0},{1,0},{2,0},{0,1}},
+		{{0,0},{1,0},{1,1},{1,2}},
+		{{2,0},{0,1},{1,1},{2,1}}} });
+
+	/*
+	* J Block
+	* {0,1,0,0} {1,0,0,0} {1,1,0,0} {1,1,1,0}
+	* {0,1,0,0} {1,1,1,0} {1,0,0,0} {0,0,1,0}
+	* {1,1,0,0} {0,0,0,0} {1,0,0,0} {0,0,0,0}
+	* {0,0,0,0} {0,0,0,0} {0,0,0,0} {0,0,0,0}
+	*/
 
 	AddBlockMap(BlockKind::J, { {
-						{0,1,0,0},
-						{0,1,0,0},
-						{1,1,0,0},
-						{0,0,0,0} },
-						{ 
-						{1,0,0,0},
-						{1,1,1,0},
-						{0,0,0,0},
-						{0,0,0,0} },
-						{ 
-						{1,1,0,0},
-						{1,0,0,0},
-						{1,0,0,0},
-						{0,0,0,0} },
-						{ 
-						{1,1,1,0},
-						{0,0,1,0},
-						{0,0,0,0},
-						{0,0,0,0} } });
+		{{1,0},{1,1},{0,2},{1,2}},
+		{{0,0},{0,1},{1,1},{2,1}},
+		{{0,0},{1,0},{0,1},{0,2}},
+		{{0,0},{1,0},{2,0},{2,1}}} });
 
-	AddBlockMap(BlockKind::T, { { 
-						{0,0,0,0},
-						{1,1,1,0},
-						{0,1,0,0},
-						{0,0,0,0} },
-						{ 
-						{0,1,0,0},
-						{1,1,0,0},
-						{0,1,0,0},
-						{0,0,0,0} },
-						{ 
-						{0,1,0,0},
-						{1,1,1,0},
-						{0,0,0,0},
-						{0,0,0,0} },
-						{ 
-						{0,1,0,0},
-						{0,1,1,0},
-						{0,1,0,0},
-						{0,0,0,0} } });
+	/*
+	* T Block
+	* {0,0,0,0} {0,1,0,0} {0,1,0,0} {0,1,0,0}
+	* {1,1,1,0} {1,1,0,0} {1,1,1,0} {0,1,1,0}
+	* {0,1,0,0} {0,1,0,0} {0,0,0,0} {0,1,0,0}
+	* {0,0,0,0} {0,0,0,0} {0,0,0,0} {0,0,0,0}
+	*/
+
+	AddBlockMap(BlockKind::T, { {
+		{{0,1},{1,1},{2,1},{1,2}},
+		{{1,0},{0,1},{1,1},{1,2}},
+		{{1,0},{0,1},{1,1},{2,1}},
+		{{1,0},{1,1},{2,1},{1,2}}} });
+
+	/*
+	* O Block
+	* {1,1,0,0}
+	* {1,1,0,0}
+	* {0,0,0,0}
+	* {0,0,0,0}
+	*/
 
 	AddBlockMap(BlockKind::O, { {
-						{1,1,0,0},
-						{1,1,0,0},
-						{0,0,0,0},
-						{0,0,0,0} } });
+		{{0,0},{1,0},{0,1},{1,1}}} });
+	
+	/*
+	* S Block
+	* {0,1,1,0} {1,0,0,0}
+	* {1,1,0,0} {1,1,0,0}
+	* {0,0,0,0} {0,1,0,0}
+	* {0,0,0,0} {0,0,0,0}
+	*/
 
 	AddBlockMap(BlockKind::S, { {
-						{0,1,1,0},
-						{1,1,0,0},
-						{0,0,0,0},
-						{0,0,0,0} },
-						{ 
-						{1,0,0,0},
-						{1,1,0,0},
-						{0,1,0,0},
-						{0,0,0,0} } });
+		{{1,0},{2,0},{0,1},{1,1}},
+		{{0,0},{0,1},{1,1},{1,2}}} });
+
+	/*
+	* Z block
+	* {1,1,0,0} {0,1,0,0}
+	* {0,1,1,0} {1,1,0,0}
+	* {0,0,0,0} {1,0,0,0}
+	* {0,0,0,0} {0,0,0,0}
+	*/
 
 	AddBlockMap(BlockKind::Z, { {
-						{1,1,0,0},
-						{0,1,1,0},
-						{0,0,0,0},
-						{0,0,0,0} },
-						{ 
-						{0,1,0,0},
-						{1,1,0,0},
-						{1,0,0,0},
-						{0,0,0,0} } });
+		{{0,0},{1,0},{1,1},{2,1}},
+		{{1,0},{0,1},{1,1},{0,2}}} });
 }
 
-void BlockManager::AddBlockMap(BlockKind kind, std::vector<vvi> blocks)
+void BlockManager::AddBlockMap(BlockKind kind, std::vector<pointVector> blocks)
 {
 	int blockIndex = 0;
-	for (const vvi& block : blocks)
+	for (const pointVector& block : blocks)
 	{
 		std::string key;
 		key += blockChar[(int)kind];
@@ -138,19 +125,11 @@ void BlockManager::ApplyToMatrix(vvi& matrix, const Point& point)
 	std::string key;
 	key += blockChar[(int)blockKind];
 	key += (char)blockIndex;
-	vvi kind = blockMap[key];
+	pointVector blocks = blockMap[key];
 
-	for (int i = 0; i < 4; i++)
+	for (const Point& block : blocks)
 	{
-		if ((point.y + i) == Y_SIZE)break;
-
-		for (int j = 0; j < 4; j++)
-		{
-			if ((point.x + j) == X_SIZE)break;
-
-			if (kind[i][j] == 1)
-				matrix[point.y + i][point.x + j] = 1;
-		}
+		matrix[block.y + point.y][block.x + point.x] = 1;
 	}
 }
 
@@ -186,6 +165,8 @@ void BlockManager::Move(const char& arrow, vvi& matrix, Point& point)
 		//위치 이동
 		point.x--;
 
+		ApplyToMatrix(matrix, point);
+
 		break;
 	case RIGHT:
 		//경계선이거나 오른쪽에 블록이 있을 때
@@ -199,22 +180,26 @@ void BlockManager::Move(const char& arrow, vvi& matrix, Point& point)
 		}
 
 		//움직일 수 있을 때 여기까지 옴
-			
+
 		//원래 자리에 있던 블록을 지우고
 		RemoveBlock(matrix, point);
 
 		//위치 이동
 		point.x++;
 
+		ApplyToMatrix(matrix, point);
+
 		break;
 	}
+
+
 }
 
 void BlockManager::Rotate(const char& command, vvi& matrix, const Point& point)
 {
 	/*
 	* 회전이 안되는 경우
-	* 
+	*
 	* 1. 블록이 화면밖으로 넘어갈 때
 	* 2. 블록이 다른 블록과 겹치는 부분이 생길 때
 	*/
@@ -269,17 +254,29 @@ void BlockManager::Rotate(const char& command, vvi& matrix, const Point& point)
 	ApplyToMatrix(matrix, point);
 }
 
-std::vector<Point> BlockManager::InspectionPointWhenRotating(const vvi& before, const vvi& after)
+pointVector BlockManager::InspectionPointWhenRotating(const pointVector& before, const pointVector& after)
 {
-	std::vector<Point> InspectionPoint;
+	pointVector InspectionPoint;
+
+	int tempMatrix[4][4]{ 
+		{0,0,0,0},
+		{0,0,0,0},
+		{0,0,0,0},
+		{0,0,0,0} };
+
+	for (int i = 0; i < 4; i++)
+	{
+		tempMatrix[before[i].y][before[i].x]--;
+		tempMatrix[after[i].y][after[i].x]++;
+	}
 
 	for (int y = 0; y < 4; y++)
 	{
 		for (int x = 0; x < 4; x++)
 		{
-			//a에 겹치지 않는 b의 부분
-			if (before[y][x] == 0 && after[y][x] == 1)
-				InspectionPoint.push_back({ x,y });
+			if (tempMatrix[y][x] != 1)continue;
+
+			InspectionPoint.push_back({ x,y });
 		}
 	}
 
@@ -301,16 +298,11 @@ void BlockManager::BlockUpdate(BlockKind kind, int index)
 	key += blockChar[(int)blockKind];
 	key += (char)blockIndex;
 
-	vvi block = blockMap[key];
+	pointVector block = blockMap[key];
 
-	for (int y = 0; y < 4; y++)
+	for (const Point& ptr : block)
 	{
-		for (int x = 0; x < 4; x++)
-		{
-			if (block[y][x] == 0)continue;
-
-			nowBlock.push_back({ x,y });
-		}
+		nowBlock.emplace_back(ptr);
 	}
 
 	CollisionBlockUpdate();
@@ -324,7 +316,7 @@ void BlockManager::CollisionBlockUpdate()
 	downCollisionBlock.clear();
 
 	//variable
-	std::pair<int,int> x_arr[4]{ {4,-1},{4,-1},{4,-1},{4,-1} };// {min,max}
+	std::pair<int, int> x_arr[4]{ {4,-1},{4,-1},{4,-1},{4,-1} };// {min,max}
 	int y_arr[4]{ -1,-1,-1,-1 };
 	/*
 	* left, right
