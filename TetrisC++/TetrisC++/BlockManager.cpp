@@ -1,14 +1,14 @@
+#include <random>
 #include "BlockManager.h"
 #include "Key.h"
-
-#include <iostream>
 
 void BlockManager::Init()
 {
 	BlockMapInit();
 
-	blockIndex = 0;
-	blockKind = BlockKind::I;
+	Shuffle();
+
+	NextBlock();
 
 	BlockUpdate(blockKind, blockIndex);
 }
@@ -103,6 +103,18 @@ void BlockManager::BlockMapInit()
 	AddBlockMap(BlockKind::Z, { {
 		{{0,0},{1,0},{1,1},{2,1}},
 		{{1,0},{0,1},{1,1},{0,2}}} });
+}
+
+void BlockManager::Shuffle()
+{
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<int> dis(0, 6);
+
+	for (int i = 0; i < 7; i++)
+	{
+		std::swap(blockOlder[i], blockOlder[dis(gen)]);
+	}
 }
 
 void BlockManager::AddBlockMap(const BlockKind& kind, const std::vector<pointVector>& blocks)
@@ -351,5 +363,93 @@ void BlockManager::CollisionBlockUpdate()
 		//down
 		if (y_arr[i] != -1)
 			downCollisionBlock.push_back({ i,y_arr[i] });
+	}
+}
+
+void BlockManager::NextBlock()
+{
+	if (blockOlderIndex != 6)
+		blockOlderIndex++;
+	else
+		blockOlderIndex = 0;
+
+	BlockUpdate(BlockKind(blockOlder[blockOlderIndex]), 0);
+}
+
+void BlockManager::CheckMatrix(vvi& matrix, const Point& point)
+{
+	int topY = Y_SIZE, bottomY = -1;
+
+	//우리가 아는건 블록 모양.
+	//일단 어느위치에서 멈췄는지 알아야 함
+
+	//검사해야할 범위를 제한하기위해 topY와 bottomY를 구함
+	//matrix의 크기만큼 검사하면 성능이 좋지않음
+	for (const Point& ptr : nowBlock)
+	{
+		topY = std::min(topY, ptr.y + point.y);
+		bottomY = std::max(bottomY, ptr.y + point.y);
+	}
+
+	for (int y = topY; y <= bottomY; y++)
+	{
+		bool isClear = true;
+		for (int x = 0; x < X_SIZE; x++)
+		{
+			if (matrix[y][x] == 0)
+			{
+				isClear = false;
+				break;
+			}
+		}
+
+		if (isClear)
+		{
+			//위 matrix에 블록이 있으면 한칸씩 다 내려와야 한다.
+			for (int x = 0; x < X_SIZE; x++)
+			{
+				matrix[y][x] = 0;
+			}
+
+			//일단 위가 비었는지 안비었는지 확인해야 한다.
+			bool isEmpty = false;
+			int tempY = y, targetY = y - 1; //지워진 줄 바로 위
+
+			while (!isEmpty)
+			{
+				for (; targetY >= 0; targetY--,tempY--)
+				{
+					isEmpty = true;
+
+					for (int x = 0; x < X_SIZE; x++)
+					{
+						if (matrix[targetY][x] == 1)
+						{
+							isEmpty = false;
+							break;
+						}
+					}
+
+					if (isEmpty)
+					{
+						//계속 위에있는 블록들을 아래로 복제했기 때문에 위가 비워졌을 경우
+						//맨위의 블록과 그 아래 줄 블록이 똑같은 모양일것이다.(맨위를 지워야함)
+						//고로 맨 위를 지워서 한칸씩 내려간 효과를 준다.
+
+						for (int x = 0; x < X_SIZE; x++)
+						{
+							matrix[tempY][x] = 0;
+						}
+
+						break;
+					}
+
+					for (int x = 0; x < X_SIZE; x++)
+					{
+						matrix[tempY][x] = matrix[targetY][x];
+					}
+				}
+			}
+		}
 	}
 }
