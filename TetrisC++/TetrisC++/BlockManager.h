@@ -32,11 +32,11 @@ public:
 
 	void AddBlockMap(const BlockKind& kind, const std::vector<pointVector>& blocks);
 
-	void ApplyToMatrix(vvi& matrix, const Point& point);
-	void RemoveBlock(vvi& matrix, const Point& point);
+	void ApplyToMatrix(vvb& matrix, const Point& point);
+	void RemoveBlock(vvb& matrix, const Point& point);
 
-	void Move(const char& arrow, vvi& matrix, Point& point);
-	void Rotate(const char& command, vvi& matrix, const Point& point);
+	void Move(const char& arrow, vvb& matrix, Point& point);
+	void Rotate(const char& command, vvb& matrix, const Point& point);
 
 	pointVector InspectionPointWhenRotating(const pointVector& before, const pointVector& after);
 
@@ -44,6 +44,6 @@ public:
 	void CollisionBlockUpdate();
 
 	void NextBlock();
-	void CheckMatrix(vvi& matrix, const Point& point);
+	void CheckMatrix(vvb& matrix, const Point& point);
 };
 

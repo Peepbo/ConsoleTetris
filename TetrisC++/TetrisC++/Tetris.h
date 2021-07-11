@@ -18,7 +18,7 @@ private:
 
 	Point point{ 4,0 };
 
-	vvi matrix;
+	vvb matrix;
 
 	float time = 0.0f, timeValue = 0.01f;
 };

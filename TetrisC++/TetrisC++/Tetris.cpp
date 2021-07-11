@@ -59,7 +59,7 @@ void Tetris::InitMatrix()
 	{
 		for (int j = 0; j < X_SIZE; j++)
 		{
-			matrix[i].emplace_back(0);
+			matrix[i].push_back({ COLOR::GRAY, 0 });
 		}
 	}
 }
@@ -88,7 +88,7 @@ void Tetris::FallDown()
 			return;
 		}
 
-		if (matrix[ptr.y + point.y + 1][ptr.x + point.x] == 1)
+		if (matrix[ptr.y + point.y + 1][ptr.x + point.x].value == 1)
 		{
 			blockMng.CheckMatrix(matrix, point);
 
