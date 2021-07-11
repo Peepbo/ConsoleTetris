@@ -135,7 +135,7 @@ void BlockManager::AddBlockMap(const BlockKind& kind, const std::vector<pointVec
 	maxIndexMap[kind] = blockIndex - 1;
 }
 
-void BlockManager::ApplyToMatrix(vvi& matrix, const Point& point)
+void BlockManager::ApplyToMatrix(vvb& matrix, const Point& point)
 {
 	std::string key;
 	key += blockChar[(int)blockKind];
@@ -144,31 +144,30 @@ void BlockManager::ApplyToMatrix(vvi& matrix, const Point& point)
 
 	for (const Point& block : blocks)
 	{
-		matrix[block.y + point.y][block.x + point.x] = 1;
+		matrix[block.y + point.y][block.x + point.x] = { COLOR(blockOlder[blockOlderIndex] + (int)COLOR::BLUE),1 };
 	}
 }
 
-void BlockManager::RemoveBlock(vvi& matrix, const Point& point)
+void BlockManager::RemoveBlock(vvb& matrix, const Point& point)
 {
 	for (const Point& ptr : nowBlock)
 	{
-		matrix[ptr.y + point.y][ptr.x + point.x] = 0;
+		matrix[ptr.y + point.y][ptr.x + point.x].value = 0;
 	}
 }
 
-void BlockManager::Move(const char& arrow, vvi& matrix, Point& point)
+void BlockManager::Move(const char& arrow, vvb& matrix, Point& point)
 {
 	switch (arrow)
 	{
 	case LEFT:
-		//경계선 일 때
-		if (point.x == 0)
-			return;
-
-		//왼쪽에 블록이 있을 때
+		//경계선이거나 왼쪽에 블록이 있을 때
 		for (const Point& ptr : leftCollisionBlock)
 		{
-			if (matrix[ptr.y + point.y][ptr.x + point.x - 1] == 1)
+			if (ptr.x + point.x == 0)
+				return;
+
+			if (matrix[ptr.y + point.y][ptr.x + point.x - 1].value == 1)
 				return;
 		}
 
@@ -188,7 +187,7 @@ void BlockManager::Move(const char& arrow, vvi& matrix, Point& point)
 			if (ptr.x + point.x == X_SIZE - 1)
 				return;
 
-			if (matrix[ptr.y + point.y][ptr.x + point.x + 1] == 1)
+			if (matrix[ptr.y + point.y][ptr.x + point.x + 1].value == 1)
 				return;
 		}
 
@@ -206,7 +205,7 @@ void BlockManager::Move(const char& arrow, vvi& matrix, Point& point)
 	ApplyToMatrix(matrix, point);
 }
 
-void BlockManager::Rotate(const char& command, vvi& matrix, const Point& point)
+void BlockManager::Rotate(const char& command, vvb& matrix, const Point& point)
 {
 	/*
 	* 회전이 안되는 경우
@@ -251,7 +250,7 @@ void BlockManager::Rotate(const char& command, vvi& matrix, const Point& point)
 		//x범위를 넘어가는 경우
 		if (tempPoint.x + point.x < 0 || tempPoint.x + point.x == X_SIZE)return;
 		//겹치는 경우
-		if (matrix[tempPoint.y + point.y][tempPoint.x + point.x] == 1)return;
+		if (matrix[tempPoint.y + point.y][tempPoint.x + point.x].value == 1)return;
 	}
 
 	//여기까지 왔다면 위에서 반환이 안된 상태, 블록을 돌려주면 된다.
@@ -376,7 +375,7 @@ void BlockManager::NextBlock()
 	BlockUpdate(BlockKind(blockOlder[blockOlderIndex]), 0);
 }
 
-void BlockManager::CheckMatrix(vvi& matrix, const Point& point)
+void BlockManager::CheckMatrix(vvb& matrix, const Point& point)
 {
 	int topY = Y_SIZE, bottomY = -1;
 
@@ -396,7 +395,7 @@ void BlockManager::CheckMatrix(vvi& matrix, const Point& point)
 		bool isClear = true;
 		for (int x = 0; x < X_SIZE; x++)
 		{
-			if (matrix[y][x] == 0)
+			if (matrix[y][x].value == 0)
 			{
 				isClear = false;
 				break;
@@ -408,7 +407,7 @@ void BlockManager::CheckMatrix(vvi& matrix, const Point& point)
 			//위 matrix에 블록이 있으면 한칸씩 다 내려와야 한다.
 			for (int x = 0; x < X_SIZE; x++)
 			{
-				matrix[y][x] = 0;
+				matrix[y][x].value = 0;
 			}
 
 			//일단 위가 비었는지 안비었는지 확인해야 한다.
@@ -423,7 +422,7 @@ void BlockManager::CheckMatrix(vvi& matrix, const Point& point)
 
 					for (int x = 0; x < X_SIZE; x++)
 					{
-						if (matrix[targetY][x] == 1)
+						if (matrix[targetY][x].value == 1)
 						{
 							isEmpty = false;
 							break;
@@ -438,7 +437,7 @@ void BlockManager::CheckMatrix(vvi& matrix, const Point& point)
 
 						for (int x = 0; x < X_SIZE; x++)
 						{
-							matrix[tempY][x] = 0;
+							matrix[tempY][x].value = 0;
 						}
 
 						break;
