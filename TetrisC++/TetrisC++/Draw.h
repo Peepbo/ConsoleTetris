@@ -6,5 +6,5 @@ class Draw
 public:
 	void ClearScreen();
 	void ShowConsoleCursor(const bool& showFlag);
-	void Display(const vvi& matrix, const float& time);
+	void Display(const vvb& matrix, const float& time);
 };
