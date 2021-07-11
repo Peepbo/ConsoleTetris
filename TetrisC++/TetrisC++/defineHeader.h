@@ -26,8 +26,6 @@ struct Block
 };
 
 #define vvb std::vector<std::vector<Block>>
-
-#define vvi std::vector<std::vector<int>>
 #define pointVector std::vector<Point>
 
 #define Y_SIZE 20
