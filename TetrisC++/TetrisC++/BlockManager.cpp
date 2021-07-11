@@ -8,8 +8,6 @@ void BlockManager::Init()
 
 	Shuffle();
 
-	NextBlock();
-
 	BlockUpdate(blockKind, blockIndex);
 }
 
@@ -301,19 +299,41 @@ void BlockManager::BlockUpdate(const BlockKind& kind, const int& index)
 	blockKind = kind;
 	blockIndex = index;
 
+	std::string key;
+	pointVector block;
+
 	//nowBlock
 	nowBlock.clear();
-
-	std::string key;
 	key += blockChar[(int)blockKind];
 	key += (char)blockIndex;
 
-	pointVector block = blockMap[key];
+	block = blockMap[key];
 
 	for (const Point& ptr : block)
 	{
 		nowBlock.emplace_back(ptr);
 	}
+
+	//nextBlock
+	nextBlock.clear();
+	key.clear();
+	block.clear();
+
+	int tempIndex = blockOlderIndex + 1;
+	if (tempIndex > 6)
+		tempIndex = 0;
+
+	key += blockChar[blockOlder[tempIndex]];
+	key += (char)0;
+
+	block = blockMap[key];
+
+	for (const Point& ptr : block)
+	{
+		nextBlock.emplace_back(ptr);
+	}
+
+	nextBlockColor = COLOR(blockOlder[tempIndex] + (int)COLOR::BLUE);
 
 	CollisionBlockUpdate();
 }
@@ -365,7 +385,7 @@ void BlockManager::CollisionBlockUpdate()
 	}
 }
 
-void BlockManager::NextBlock()
+void BlockManager::ChangeBlock()
 {
 	if (blockOlderIndex != 6)
 		blockOlderIndex++;
@@ -375,7 +395,7 @@ void BlockManager::NextBlock()
 	BlockUpdate(BlockKind(blockOlder[blockOlderIndex]), 0);
 }
 
-void BlockManager::CheckMatrix(vvb& matrix, const Point& point)
+void BlockManager::CheckMatrix(vvb& matrix, const Point& point, int& score)
 {
 	int topY = Y_SIZE, bottomY = -1;
 
@@ -404,6 +424,8 @@ void BlockManager::CheckMatrix(vvb& matrix, const Point& point)
 
 		if (isClear)
 		{
+			score++;
+
 			//위 matrix에 블록이 있으면 한칸씩 다 내려와야 한다.
 			for (int x = 0; x < X_SIZE; x++)
 			{

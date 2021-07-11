@@ -19,11 +19,13 @@ public:
 	int blockOlder[7]{ 0,1,2,3,4,5,6 };
 	int blockOlderIndex = 0;
 
-	pointVector nowBlock;
+	pointVector nowBlock, nextBlock;
 	pointVector leftCollisionBlock, rightCollisionBlock, downCollisionBlock;
 
 	BlockKind blockKind;
 	int blockIndex;
+
+	COLOR nextBlockColor;
 
 	//function
 	void Init();
@@ -43,7 +45,7 @@ public:
 	void BlockUpdate(const BlockKind& kind, const int& index);
 	void CollisionBlockUpdate();
 
-	void NextBlock();
-	void CheckMatrix(vvb& matrix, const Point& point);
+	void ChangeBlock();
+	void CheckMatrix(vvb& matrix, const Point& point, int& score);
 };
 
