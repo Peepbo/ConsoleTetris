@@ -21,5 +21,6 @@ private:
 	vvb matrix;
 
 	float time = 0.0f, timeValue = 0.01f;
+	int score = 0;
 };
 

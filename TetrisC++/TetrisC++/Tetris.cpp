@@ -2,10 +2,11 @@
 #include "conio.h"
 #include "Key.h"
 
-#include <iostream>
+#include <windows.h>
 
 void Tetris::Start()
 {
+	draw.SetWindowSize(195, 475);
 	draw.ShowConsoleCursor(false);
 	InitMatrix();
 	blockMng.Init();
@@ -44,7 +45,7 @@ void Tetris::Update()
 			timeValue *= 0.5f;
 
 		// output
-		draw.Display(matrix, time);
+		draw.Display(matrix, time, score, blockMng.nextBlock, blockMng.nextBlockColor);
 		draw.ClearScreen();
 
 		NextTime();
@@ -81,19 +82,19 @@ void Tetris::FallDown()
 	{
 		if (ptr.y + point.y == Y_SIZE - 1)
 		{
-			blockMng.CheckMatrix(matrix, point);
+			blockMng.CheckMatrix(matrix, point, score);
 
 			point = { 4,0 };
-			blockMng.NextBlock();
+			blockMng.ChangeBlock();
 			return;
 		}
 
 		if (matrix[ptr.y + point.y + 1][ptr.x + point.x].value == 1)
 		{
-			blockMng.CheckMatrix(matrix, point);
+			blockMng.CheckMatrix(matrix, point, score);
 
 			point = { 4,0 };
-			blockMng.NextBlock();
+			blockMng.ChangeBlock();
 			return;
 		}
 	}
