@@ -199,8 +199,6 @@ void BlockManager::Move(const char& arrow, vvb& matrix, Point& point)
 
 		break;
 	}
-
-	ApplyToMatrix(matrix, point);
 }
 
 void BlockManager::Rotate(const char& command, vvb& matrix, const Point& point)
@@ -258,8 +256,84 @@ void BlockManager::Rotate(const char& command, vvb& matrix, const Point& point)
 
 	//nowBlock change
 	BlockUpdate(blockKind, afterIndex);
+}
 
-	ApplyToMatrix(matrix, point);
+void BlockManager::QuickDown(vvb& matrix, Point& point, int& score)
+{
+	const Block tempBlock = matrix[nowBlock[0].y + point.y][nowBlock[0].x + point.x];
+	Point tempPoint = point;
+	bool isDown = true;
+
+	while (isDown)
+	{
+		for (const Point& ptr : downCollisionBlock)
+		{
+			if (ptr.y + tempPoint.y == Y_SIZE - 1)
+			{
+				isDown = false;
+				break;
+			}
+
+			if (matrix[ptr.y + tempPoint.y + 1][ptr.x + tempPoint.x].value == 1)
+			{
+				isDown = false;
+				break;
+			}
+		}
+
+		if (isDown)
+			tempPoint.y++;
+	}
+
+	//원래 자리에 있던 블록을 지우고
+	RemoveBlock(matrix, point);
+
+	//최종 위치로 옮긴 뒤
+	for (const Point& ptr : nowBlock)
+	{
+		matrix[ptr.y + tempPoint.y][ptr.x + tempPoint.x] = tempBlock;
+	}
+
+	//줄 검사 후
+	CheckMatrix(matrix, tempPoint, score);
+
+	//포인터 위치를 초기화 시키고
+	point = { 4,0 };
+
+	//새로운 블록을 받음
+	ChangeBlock();
+}
+
+void BlockManager::FallDown(vvb& matrix, Point& point, int& score)
+{
+	for (const Point& ptr : downCollisionBlock)
+	{
+		if (ptr.y + point.y == Y_SIZE - 1)
+		{
+			CheckMatrix(matrix, point, score);
+
+			point = { 4,0 };
+			ChangeBlock();
+			return;
+		}
+
+		if (matrix[ptr.y + point.y + 1][ptr.x + point.x].value == 1)
+		{
+			CheckMatrix(matrix, point, score);
+
+			point = { 4,0 };
+			ChangeBlock();
+			return;
+		}
+	}
+
+	//여기까지 왔다면 바닥으로 내려가도 되는 경우
+
+	//원래 자리에 있던 블록을 지우고
+	RemoveBlock(matrix, point);
+
+	//밑으로 이동
+	point.y++;
 }
 
 pointVector BlockManager::InspectionPointWhenRotating(const pointVector& before, const pointVector& after)
