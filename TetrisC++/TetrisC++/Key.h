@@ -14,3 +14,7 @@
 #define ROTATE_R_SMALL 'x'
 #define ROTATE_R_BIG 'X'
 
+#define SPEED_UP '+'
+#define SPEED_DOWN '-'
+
+#define QUICK_DOWN ' '

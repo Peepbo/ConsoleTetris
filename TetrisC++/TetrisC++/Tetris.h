@@ -8,10 +8,11 @@ class Tetris
 public:
 	void Start();
 	void Update();
+
+	void InputKey(char& key);
 	
 	void InitMatrix();
 	void NextTime();
-	void FallDown();
 private:
 	Draw draw;
 	BlockManager blockMng;

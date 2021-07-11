@@ -17,39 +17,49 @@ void Tetris::Update()
 	char key = 'N';
 	while (true)
 	{
-		// input
-		if (_kbhit()) key = _getch();
-		else key = ' ';
+		InputKey(key);
 
-		switch (key)
-		{
-		case LEFT:
-		case RIGHT:
-			blockMng.Move(key, matrix, point);
-			break;
-		case ROTATE_L_SMALL:
-		case ROTATE_L_BIG:
-		case ROTATE_R_SMALL:
-		case ROTATE_R_BIG:
-			blockMng.Rotate(key, matrix, point);
-			break;
-		default:
-			blockMng.ApplyToMatrix(matrix, point);
-			break;
-		}
-
-		// only test
-		if (key == '+')
-			timeValue *= 2;
-		else if (key == '-')
-			timeValue *= 0.5f;
-
-		// output
 		draw.Display(matrix, time, score, blockMng.nextBlock, blockMng.nextBlockColor);
 		draw.ClearScreen();
 
 		NextTime();
 	}
+}
+
+void Tetris::InputKey(char& key)
+{
+	if (_kbhit()) 
+		key = _getch();
+	else 
+		key = '*';
+
+	switch (key)
+	{
+	case LEFT:
+	case RIGHT:
+		blockMng.Move(key, matrix, point);
+		break;
+	case DOWN:
+		blockMng.FallDown(matrix, point, score);
+		break;
+	case ROTATE_L_SMALL:
+	case ROTATE_L_BIG:
+	case ROTATE_R_SMALL:
+	case ROTATE_R_BIG:
+		blockMng.Rotate(key, matrix, point);
+		break;
+	case SPEED_UP:
+		timeValue *= 2;
+		break;
+	case SPEED_DOWN:
+		timeValue *= 0.5f;
+		break;
+	case QUICK_DOWN:
+		blockMng.QuickDown(matrix, point, score);
+		break;
+	}
+
+	blockMng.ApplyToMatrix(matrix, point);
 }
 
 void Tetris::InitMatrix()
@@ -72,38 +82,7 @@ void Tetris::NextTime()
 	if (time > 1.0f)
 	{
 		time = 0.f;
-		FallDown();
+
+		blockMng.FallDown(matrix, point, score);
 	}
-}
-
-void Tetris::FallDown()
-{
-	for (const Point& ptr : blockMng.downCollisionBlock)
-	{
-		if (ptr.y + point.y == Y_SIZE - 1)
-		{
-			blockMng.CheckMatrix(matrix, point, score);
-
-			point = { 4,0 };
-			blockMng.ChangeBlock();
-			return;
-		}
-
-		if (matrix[ptr.y + point.y + 1][ptr.x + point.x].value == 1)
-		{
-			blockMng.CheckMatrix(matrix, point, score);
-
-			point = { 4,0 };
-			blockMng.ChangeBlock();
-			return;
-		}
-	}
-
-	//여기까지 왔다면 바닥으로 내려가도 되는 경우
-
-	//원래 자리에 있던 블록을 지우고
-	blockMng.RemoveBlock(matrix, point);
-
-	//밑으로 이동
-	point.y++;
 }
