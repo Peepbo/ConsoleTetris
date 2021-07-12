@@ -10,56 +10,46 @@ void Tetris::Start()
 	draw.ShowConsoleCursor(false);
 	InitMatrix();
 	blockMng.Init();
+	keyMng.Init();
 }
 
 void Tetris::Update()
 {
-	char key = 'N';
 	while (true)
 	{
-		InputKey(key);
+		keyMng.Update();
+		InputKey();
 
-		draw.Display(matrix, time, score, blockMng.nextBlockData, {});
+		blockMng.ApplyToMatrix(matrix, point);
+
+		draw.Display(matrix, checkTime, score, blockMng.nextBlockData, {});
 		draw.ClearScreen();
 
 		NextTime();
 	}
 }
 
-void Tetris::InputKey(char& key)
+void Tetris::InputKey()
 {
-	if (_kbhit()) 
-		key = _getch();
-	else 
-		key = '*';
-
-	switch (key)
-	{
-	case LEFT:
-	case RIGHT:
-		blockMng.Move(key, matrix, point);
-		break;
-	case DOWN:
+	if (keyMng.KeyDown(VK_LEFT))
+		blockMng.Move(LEFT, matrix, point);
+	if(keyMng.KeyDown(VK_RIGHT))
+		blockMng.Move(RIGHT, matrix, point);
+	if(keyMng.KeyDown(VK_DOWN))
 		blockMng.FallDown(matrix, point, score);
-		break;
-	case ROTATE_L_SMALL:
-	case ROTATE_L_BIG:
-	case ROTATE_R_SMALL:
-	case ROTATE_R_BIG:
-		blockMng.Rotate(key, matrix, point);
-		break;
-	case SPEED_UP:
-		timeValue *= 2;
-		break;
-	case SPEED_DOWN:
-		timeValue *= 0.5f;
-		break;
-	case QUICK_DOWN:
-		blockMng.QuickDown(matrix, point, score, time);
-		break;
-	}
 
-	blockMng.ApplyToMatrix(matrix, point);
+	if(keyMng.KeyDown(VK_UP) || keyMng.KeyDown(0x58))
+		blockMng.Rotate(ROTATE_R, matrix, point);
+	else if(keyMng.KeyDown(0x5A))
+		blockMng.Rotate(ROTATE_L, matrix, point);
+
+	if(keyMng.KeyDown(VK_OEM_COMMA))
+		timeValue *= 2;
+	else if(keyMng.KeyDown(VK_OEM_MINUS))
+		timeValue *= 0.5f;
+
+	if(keyMng.KeyDown(VK_SPACE))
+		blockMng.QuickDown(matrix, point, score, checkTime);
 }
 
 void Tetris::InitMatrix()
@@ -77,11 +67,11 @@ void Tetris::InitMatrix()
 
 void Tetris::NextTime()
 {
-	time += timeValue;
+	checkTime += timeValue;
 
-	if (time > 1.0f)
+	if (checkTime > 1.0f)
 	{
-		time = 0.f;
+		checkTime = 0.f;
 
 		blockMng.FallDown(matrix, point, score);
 	}
