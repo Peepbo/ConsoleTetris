@@ -18,12 +18,13 @@ public:
 
 	int blockOlder[7]{ 0,1,2,3,4,5,6 };
 	int blockOlderIndex = 0;
+	COLOR blockColor, saveBlockColor;
 
-	pointVector nowBlock, nextBlock;
+	pointVector nowBlock, nextBlock, saveBlock;
 	pointVector leftCollisionBlock, rightCollisionBlock, downCollisionBlock;
 
-	BlockKind blockKind;
-	int blockIndex;
+	BlockKind blockKind, saveBlockKind;
+	int blockIndex, saveBlockIndex;
 
 	BlockData nextBlockData, saveBlockData;
 
@@ -42,6 +43,7 @@ public:
 
 	void QuickDown(vvb& matrix, Point& point, int& score, float& time);
 	void FallDown(vvb& matrix, Point& point, int& score);
+	void Save(vvb& matrix, Point& point);
 
 	pointVector InspectionPointWhenRotating(const pointVector& before, const pointVector& after);
 

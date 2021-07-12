@@ -8,7 +8,8 @@ void BlockManager::Init()
 
 	Shuffle();
 
-	BlockUpdate(blockKind, blockIndex);
+	blockColor = COLOR(blockOlder[blockOlderIndex] + (int)COLOR::BLUE);
+	BlockUpdate(BlockKind(blockOlder[blockOlderIndex]), 0);
 }
 
 void BlockManager::BlockMapInit()
@@ -142,7 +143,7 @@ void BlockManager::ApplyToMatrix(vvb& matrix, const Point& point)
 
 	for (const Point& block : blocks)
 	{
-		matrix[block.y + point.y][block.x + point.x] = { COLOR(blockOlder[blockOlderIndex] + (int)COLOR::BLUE),1 };
+		matrix[block.y + point.y][block.x + point.x] = { blockColor,1 };
 	}
 }
 
@@ -339,6 +340,51 @@ void BlockManager::FallDown(vvb& matrix, Point& point, int& score)
 	point.y++;
 }
 
+void BlockManager::Save(vvb& matrix, Point& point)
+{
+	RemoveBlock(matrix, point);
+
+	//비어있거나, 안비어있거나 둘 중 하나
+
+	if (saveBlock.empty())
+	{
+		//블록을 저장하고 
+		saveBlock = nowBlock;
+		saveBlockKind = blockKind;
+		saveBlockIndex = blockIndex;
+		saveBlockColor = COLOR(blockOlder[blockOlderIndex] + (int)COLOR::BLUE);
+
+		saveBlockData = { saveBlock ,saveBlockColor };
+
+		//원 위치로 옮긴 뒤
+		point = { 4,0 };
+
+		//다음 블록을 받는다.
+		ChangeBlock();
+	}
+
+	else
+	{
+		//swap()
+		std::swap(saveBlockKind, blockKind);
+		std::swap(saveBlockIndex, blockIndex);
+		std::swap(saveBlockColor, blockColor);
+
+		//현재 블록과 저장된 블록 정보를 바꿔준다.
+		auto temp = nowBlock;
+		nowBlock = saveBlock;
+		saveBlock = temp;
+
+		saveBlockData = { saveBlock ,saveBlockColor };
+
+		//새 블록으로 업데이트 해주고
+		BlockUpdate(blockKind, blockIndex);
+
+		//원 위치로 옮긴다.
+		point = { 4,0 };
+	}
+}
+
 pointVector BlockManager::InspectionPointWhenRotating(const pointVector& before, const pointVector& after)
 {
 	pointVector InspectionPoint;
@@ -470,6 +516,8 @@ void BlockManager::ChangeBlock()
 		blockOlderIndex = 0;
 
 	BlockUpdate(BlockKind(blockOlder[blockOlderIndex]), 0);
+
+	blockColor = COLOR(blockOlder[blockOlderIndex] + (int)COLOR::BLUE);
 }
 
 void BlockManager::CheckMatrix(vvb& matrix, const Point& point, int& score)

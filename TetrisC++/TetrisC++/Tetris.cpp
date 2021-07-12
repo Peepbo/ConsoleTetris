@@ -22,7 +22,7 @@ void Tetris::Update()
 
 		blockMng.ApplyToMatrix(matrix, point);
 
-		draw.Display(matrix, checkTime, score, blockMng.nextBlockData, {});
+		draw.Display(matrix, checkTime, score, blockMng.nextBlockData, blockMng.saveBlockData);
 		draw.ClearScreen();
 
 		NextTime();
@@ -50,6 +50,9 @@ void Tetris::InputKey()
 
 	if(keyMng.KeyDown(VK_SPACE))
 		blockMng.QuickDown(matrix, point, score, checkTime);
+
+	if (keyMng.KeyDown(VK_SHIFT))
+		blockMng.Save(matrix, point);
 }
 
 void Tetris::InitMatrix()

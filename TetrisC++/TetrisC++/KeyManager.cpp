@@ -6,7 +6,7 @@ void KeyManager::Init()
 
 	InitKeyData({ VK_UP, 0x58/*X*/, 0x5A/*Z*/,
 		VK_OEM_COMMA/*+*/,VK_OEM_MINUS/*-*/,
-		VK_SPACE }, HOW_KEY_WORK::OperatesWhenPressedWhenNotPressed);
+		VK_SPACE,VK_SHIFT }, HOW_KEY_WORK::OperatesWhenPressedWhenNotPressed);
 }
 
 void KeyManager::InitKeyData(std::vector<int> vKeys, HOW_KEY_WORK howKeyWork)
@@ -34,12 +34,14 @@ bool KeyManager::KeyDown(int vKey)
 		}
 	case HOW_KEY_WORK::OperatesWhenPressedWhenNotPressed:
 
-		if (keyMap[vKey].isKeyDown && !isDown)
-			keyMap[vKey].isKeyDown = false;
+		bool& isKeyDown = keyMap[vKey].isKeyDown;
 
-		if (!keyMap[vKey].isKeyDown && isDown)
+		if (isKeyDown && !isDown)
+			isKeyDown = false;
+
+		if (!isKeyDown && isDown)
 		{
-			keyMap[vKey].isKeyDown = true;
+			isKeyDown = true;
 			return true;
 		}
 	}
