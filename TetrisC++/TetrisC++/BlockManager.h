@@ -40,7 +40,7 @@ public:
 	void Move(const char& arrow, vvb& matrix, Point& point);
 	void Rotate(const char& command, vvb& matrix, const Point& point);
 
-	void QuickDown(vvb& matrix, Point& point, int& score);
+	void QuickDown(vvb& matrix, Point& point, int& score, float& time);
 	void FallDown(vvb& matrix, Point& point, int& score);
 
 	pointVector InspectionPointWhenRotating(const pointVector& before, const pointVector& after);

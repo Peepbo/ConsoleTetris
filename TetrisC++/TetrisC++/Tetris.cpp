@@ -55,7 +55,7 @@ void Tetris::InputKey(char& key)
 		timeValue *= 0.5f;
 		break;
 	case QUICK_DOWN:
-		blockMng.QuickDown(matrix, point, score);
+		blockMng.QuickDown(matrix, point, score, time);
 		break;
 	}
 
