@@ -6,7 +6,7 @@
 
 void Tetris::Start()
 {
-	draw.SetWindowSize(195, 475);
+	draw.SetWindowSize(235, 475);
 	draw.ShowConsoleCursor(false);
 	InitMatrix();
 	blockMng.Init();
@@ -19,7 +19,7 @@ void Tetris::Update()
 	{
 		InputKey(key);
 
-		draw.Display(matrix, time, score, blockMng.nextBlock, blockMng.nextBlockColor);
+		draw.Display(matrix, time, score, blockMng.nextBlockData, {});
 		draw.ClearScreen();
 
 		NextTime();
