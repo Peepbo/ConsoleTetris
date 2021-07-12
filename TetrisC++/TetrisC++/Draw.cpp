@@ -8,6 +8,9 @@ void Draw::SetWindowSize(const int& width, const int& height)
 	RECT r;
 	GetWindowRect(console, &r);
 	MoveWindow(console, r.left, r.top, width, height, TRUE);
+
+	space = "    ";
+	margin = "  ";
 }
 
 void Draw::ClearScreen()
@@ -29,41 +32,77 @@ void Draw::ShowConsoleCursor(const bool& showFlag)
 	SetConsoleCursorInfo(out, &cursorInfo);
 }
 
-void Draw::Display(const vvb& matrix, const float& time, const int& score, const pointVector& nextBlock, const COLOR& nextBlockColor)
+void Draw::NextAndSaveBlockDisplay(const BlockData& nextBlockData,const BlockData& saveBlockData)
 {
-	char tempBlock[4][4]{
+	char nextBlockMatrix[4][4]{
 	{0,0,0,0},
 	{0,0,0,0},
 	{0,0,0,0},
 	{0,0,0,0} };
 
-	for (const Point& ptr : nextBlock)
+	char saveBlockMatrix[4][4]{
+	{0,0,0,0},
+	{0,0,0,0},
+	{0,0,0,0},
+	{0,0,0,0} };
+
+	for (const Point& ptr : nextBlockData.pv)
 	{
-		tempBlock[ptr.y][ptr.x] = 1;
+		nextBlockMatrix[ptr.y][ptr.x] = 1;
 	}
 
-	std::cout << "NEXT BLOCK" << '\n';
+	for (const Point& ptr : saveBlockData.pv)
+	{
+		saveBlockMatrix[ptr.y][ptr.x] = 1;
+	}
+
+	std::cout << margin << "NEXT" << '\t' << space << margin << "SAVE" << '\n';
+
 	for (int i = 0; i < 4; i++)
 	{
+		std::cout << margin;
 		for (int j = 0; j < 4; j++)
 		{
-			if(tempBlock[i][j] == 0)
+			if (nextBlockMatrix[i][j] == 0)
 				std::cout << "бр";
 			else
 			{
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (int)nextBlockColor);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (int)nextBlockData.block.color);
 				std::cout << "бс";
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (int)COLOR::GRAY);
 			}
 		}
+
+		std::cout << space;
+
+		for (int j = 0; j < 4; j++)
+		{
+			if (saveBlockMatrix[i][j] == 0)
+				std::cout << "бр";
+			else
+			{
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (int)saveBlockData.block.color);
+				std::cout << "бс";
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (int)COLOR::GRAY);
+			}
+		}
+
 		std::cout << '\n';
 	}
+}
 
-	std::cout << "SCORE : " << score << '\n';
+void Draw::Display(const vvb& matrix, const float& time, const int& score,
+	const BlockData& nextBlockData, const BlockData& saveBlockData)
+{
+	//next save
+	NextAndSaveBlockDisplay(nextBlockData, saveBlockData);
+
+	std::cout << margin << "SCORE : " << score << '\n';
 
 	//matrix
 	for (int i = 0; i < Y_SIZE; i++)
 	{
+		std::cout << margin;
 		for (int j = 0; j < X_SIZE; j++)
 		{
 			if (matrix[i][j].value == 0)
@@ -78,7 +117,4 @@ void Draw::Display(const vvb& matrix, const float& time, const int& score, const
 
 		std::cout << '\n';
 	}
-
-	//time
-	std::cout << time;
 }
