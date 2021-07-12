@@ -30,3 +30,9 @@ struct Block
 
 #define Y_SIZE 20
 #define X_SIZE 10
+
+struct BlockData
+{
+	pointVector pv;
+	Block block;
+};
