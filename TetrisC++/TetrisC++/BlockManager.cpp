@@ -218,16 +218,14 @@ void BlockManager::Rotate(const char& command, vvb& matrix, const Point& point)
 	int afterIndex = blockIndex;
 	switch (command)
 	{
-	case ROTATE_L_SMALL:
-	case ROTATE_L_BIG:
+	case ROTATE_L:
 		if (afterIndex == 0)
 			afterIndex = maxIndexMap[blockKind];
 		else
 			afterIndex--;
 		break;
 
-	case ROTATE_R_SMALL:
-	case ROTATE_R_BIG:
+	case ROTATE_R:
 		if (afterIndex == maxIndexMap[blockKind])
 			afterIndex = 0;
 		else
