@@ -412,7 +412,7 @@ void BlockManager::BlockUpdate(const BlockKind& kind, const int& index)
 		nextBlock.emplace_back(ptr);
 	}
 
-	nextBlockColor = COLOR(blockOlder[tempIndex] + (int)COLOR::BLUE);
+	nextBlockData = { nextBlock, COLOR(blockOlder[tempIndex] + (int)COLOR::BLUE) };
 
 	CollisionBlockUpdate();
 }

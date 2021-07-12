@@ -25,7 +25,7 @@ public:
 	BlockKind blockKind;
 	int blockIndex;
 
-	COLOR nextBlockColor;
+	BlockData nextBlockData, saveBlockData;
 
 	//function
 	void Init();
