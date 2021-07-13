@@ -166,8 +166,6 @@ void BlockManager::ResetPoint(Point& point)
 
 void BlockManager::LandingPointUpdate(const vvb& matrix, const Point& point)
 {
-	if (point.y == Y_SIZE - 1)return;
-
 	landingMap.clear();
 
 	int landingY = point.y;
@@ -182,20 +180,24 @@ void BlockManager::LandingPointUpdate(const vvb& matrix, const Point& point)
 		
 		for (const Point& ptr : downCollisionBlock)
 		{
+			if (ptr.y + landingY > Y_SIZE - 1)return;
+
 			if (matrix[ptr.y + landingY][ptr.x + point.x].value == 1)
 			{
 				isBlock = true;
 			}
 
-			else if (ptr.y + landingY >= Y_SIZE - 1)
+			else if (ptr.y + landingY == Y_SIZE - 1)
 			{
 				isLand = true;
 			}
 		}
 	}
 
+	landingCount = landingY;
 
-	//땅인지 아닌지 판별해야함.
+	//아래에 블록이 있으면 그 위가 착지 지점 (+1)
+	//아래에 아무런 블록이 없으면 그 위치가 착지 지점 (+0)
 	for (const Point& ptr : nowBlock)
 	{
 		landingMap[{ptr.x + point.x, ptr.y + landingY - (isBlock ? 1 : 0)}] = 1;
@@ -318,45 +320,17 @@ void BlockManager::QuickDown(vvb& matrix, Point& point, int& score, float& time)
 {
 	time = 0;
 
-	Point tempPoint = point;
-	bool isDown = true;
-
-	while (isDown)
-	{
-		for (const Point& ptr : downCollisionBlock)
-		{
-			//맨 아래에 위치하면
-			if (ptr.y + tempPoint.y == Y_SIZE - 1)
-			{
-				isDown = false;
-				break;
-			}
-
-			//바로 아래가 블록이면
-			if (matrix[ptr.y + tempPoint.y + 1][ptr.x + tempPoint.x].value == 1)
-			{
-				isDown = false;
-				break;
-			}
-		}
-
-		if (isDown)
-			tempPoint.y++;
-	}
-
 	//원래 자리에 있던 블록을 지우고
 	RemoveBlock(matrix, point);
 
-	//최종 위치로 옮긴 뒤
-
-	for (const Point& block : nowBlock)
+	//착지 위치에 블록을 생성
+	for (const auto& it : landingMap)
 	{
-		matrix[block.y + tempPoint.y][block.x + tempPoint.x] = 
-		{ blockColor,1 };
+		matrix[it.first.y][it.first.x] = { blockColor,1 };
 	}
 	
 	//줄 검사 후
-	CheckMatrix(matrix, tempPoint, score);
+	CheckMatrix(matrix, { point.x,landingCount }, score);
 	
 	//포인터 위치를 초기화 시키고
 	ResetPoint(point);
