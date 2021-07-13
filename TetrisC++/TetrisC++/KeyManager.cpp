@@ -5,7 +5,7 @@ void KeyManager::Init()
 	InitKeyData({ VK_LEFT, VK_RIGHT, VK_DOWN }, HOW_KEY_WORK::PressToWork);
 
 	InitKeyData({ VK_UP, 0x58/*X*/, 0x5A/*Z*/,
-		VK_OEM_COMMA/*+*/,VK_OEM_MINUS/*-*/,
+		VK_ADD/*+*/,VK_SUBTRACT/*-*/,
 		VK_SPACE,VK_SHIFT }, HOW_KEY_WORK::OperatesWhenPressedWhenNotPressed);
 }
 

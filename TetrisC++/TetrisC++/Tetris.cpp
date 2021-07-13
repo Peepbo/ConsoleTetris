@@ -20,12 +20,12 @@ void Tetris::Update()
 		keyMng.Update();
 		InputKey();
 
+		NextTime();
+
 		blockMng.ApplyToMatrix(matrix, point);
 
 		draw.Display(matrix, checkTime, score, blockMng.nextBlockData, blockMng.saveBlockData);
 		draw.ClearScreen();
-
-		NextTime();
 	}
 }
 
@@ -43,9 +43,9 @@ void Tetris::InputKey()
 	else if(keyMng.KeyDown(0x5A))
 		blockMng.Rotate(ROTATE_L, matrix, point);
 
-	if(keyMng.KeyDown(VK_OEM_COMMA))
+	if(keyMng.KeyDown(VK_ADD))
 		timeValue *= 2;
-	else if(keyMng.KeyDown(VK_OEM_MINUS))
+	else if(keyMng.KeyDown(VK_SUBTRACT))
 		timeValue *= 0.5f;
 
 	if(keyMng.KeyDown(VK_SPACE))
