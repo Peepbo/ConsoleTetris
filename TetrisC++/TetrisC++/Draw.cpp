@@ -92,7 +92,8 @@ void Draw::NextAndSaveBlockDisplay(const BlockData& nextBlockData,const BlockDat
 }
 
 void Draw::Display(const vvb& matrix, const float& time, const int& score,
-	const BlockData& nextBlockData, const BlockData& saveBlockData)
+	const BlockData& nextBlockData, const BlockData& saveBlockData,
+	const std::unordered_map <Point, int, std::hash<Point>>& landingMap)
 {
 	//next save
 	NextAndSaveBlockDisplay(nextBlockData, saveBlockData);
@@ -100,19 +101,28 @@ void Draw::Display(const vvb& matrix, const float& time, const int& score,
 	std::cout << margin << "SCORE : " << score << '\n';
 
 	//matrix
-	for (int i = 0; i < Y_SIZE; i++)
+	for (int y = 0; y < Y_SIZE; y++)
 	{
 		std::cout << margin;
-		for (int j = 0; j < X_SIZE; j++)
+		for (int x = 0; x < X_SIZE; x++)
 		{
-			if (matrix[i][j].value == 0)
-				std::cout << "¡à";
-			else
+			if (matrix[y][x].value == 1)
 			{
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (int)matrix[i][j].color);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (int)matrix[y][x].color);
+				std::cout << "¡á";
+				//¢Ã¢Ç¢È¢É¢Ê¢Ë¢Ì
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (int)COLOR::GRAY);
+			}
+
+			else if (landingMap.find({ x,y }) != landingMap.end())
+			{
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (int)COLOR::DARK_GRAY);
 				std::cout << "¡á";
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (int)COLOR::GRAY);
 			}
+
+			else if (matrix[y][x].value == 0)
+				std::cout << "¡à";
 		}
 
 		std::cout << '\n';
