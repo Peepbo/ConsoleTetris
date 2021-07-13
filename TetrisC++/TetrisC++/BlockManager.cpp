@@ -295,7 +295,7 @@ void BlockManager::QuickDown(vvb& matrix, Point& point, int& score, float& time)
 	for (const Point& block : nowBlock)
 	{
 		matrix[block.y + tempPoint.y][block.x + tempPoint.x] = 
-		{ COLOR(blockOlder[blockOlderIndex] + (int)COLOR::BLUE),1 };
+		{ blockColor,1 };
 	}
 	
 	//줄 검사 후
