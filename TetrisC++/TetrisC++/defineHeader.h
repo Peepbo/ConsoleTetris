@@ -4,6 +4,20 @@
 struct Point
 {
 	int x, y;
+
+	bool operator==(const Point& p)const
+	{
+		return x == p.x && y == p.y;
+	}
+};
+
+template <>
+struct std::hash<Point>
+{
+	std::size_t operator () (const Point &p)const
+	{
+		return p.x ^ p.y;
+	}
 };
 
 enum class COLOR
