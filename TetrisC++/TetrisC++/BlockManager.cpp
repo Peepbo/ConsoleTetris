@@ -2,7 +2,7 @@
 #include "BlockManager.h"
 #include "Key.h"
 
-void BlockManager::Init()
+void BlockManager::Init(const vvb& matrix,Point& point)
 {
 	BlockMapInit();
 
@@ -10,6 +10,10 @@ void BlockManager::Init()
 
 	blockColor = COLOR(blockOlder[blockOlderIndex] + (int)COLOR::BLUE);
 	BlockUpdate(BlockKind(blockOlder[blockOlderIndex]), 0);
+
+	ResetPoint(point);
+
+	LandingPointUpdate(matrix, point);
 }
 
 void BlockManager::BlockMapInit()
@@ -155,6 +159,50 @@ void BlockManager::RemoveBlock(vvb& matrix, const Point& point)
 	}
 }
 
+void BlockManager::ResetPoint(Point& point)
+{
+	point = { 4,0 };
+}
+
+void BlockManager::LandingPointUpdate(const vvb& matrix, const Point& point)
+{
+	if (point.y == Y_SIZE - 1)return;
+
+	landingMap.clear();
+
+	int landingY = point.y;
+
+	bool isLand = false, isBlock = false;
+
+	while (!isLand && !isBlock)
+	{
+		if (landingY + 1 > Y_SIZE - 1)return;
+
+		landingY++;
+		
+		for (const Point& ptr : downCollisionBlock)
+		{
+			if (matrix[ptr.y + landingY][ptr.x + point.x].value == 1)
+			{
+				isBlock = true;
+			}
+
+			else if (ptr.y + landingY >= Y_SIZE - 1)
+			{
+				isLand = true;
+			}
+		}
+	}
+
+
+	//땅인지 아닌지 판별해야함.
+	for (const Point& ptr : nowBlock)
+	{
+		landingMap[{ptr.x + point.x, ptr.y + landingY - (isBlock ? 1 : 0)}] = 1;
+	}
+}
+
+
 void BlockManager::Move(const char& arrow, vvb& matrix, Point& point)
 {
 	switch (arrow)
@@ -178,6 +226,9 @@ void BlockManager::Move(const char& arrow, vvb& matrix, Point& point)
 		//위치 이동
 		point.x--;
 
+		//착지 지점 업데이트
+		LandingPointUpdate(matrix, point);
+
 		break;
 	case RIGHT:
 		//경계선이거나 오른쪽에 블록이 있을 때
@@ -197,6 +248,9 @@ void BlockManager::Move(const char& arrow, vvb& matrix, Point& point)
 
 		//위치 이동
 		point.x++;
+
+		//착지 지점 업데이트
+		LandingPointUpdate(matrix, point);
 
 		break;
 	}
@@ -255,6 +309,9 @@ void BlockManager::Rotate(const char& command, vvb& matrix, const Point& point)
 
 	//nowBlock change
 	BlockUpdate(blockKind, afterIndex);
+
+	//착지 지점 업데이트
+	LandingPointUpdate(matrix, point);
 }
 
 void BlockManager::QuickDown(vvb& matrix, Point& point, int& score, float& time)
@@ -302,10 +359,13 @@ void BlockManager::QuickDown(vvb& matrix, Point& point, int& score, float& time)
 	CheckMatrix(matrix, tempPoint, score);
 	
 	//포인터 위치를 초기화 시키고
-	point = { 4,0 };
+	ResetPoint(point);
 	
 	//새로운 블록을 받음
 	ChangeBlock();
+
+	//착지 지점 업데이트
+	LandingPointUpdate(matrix, point);
 }
 
 void BlockManager::FallDown(vvb& matrix, Point& point, int& score)
@@ -316,8 +376,11 @@ void BlockManager::FallDown(vvb& matrix, Point& point, int& score)
 		{
 			CheckMatrix(matrix, point, score);
 
-			point = { 4,0 };
+			ResetPoint(point);
 			ChangeBlock();
+
+			//착지 지점 업데이트
+			LandingPointUpdate(matrix, point);
 			return;
 		}
 
@@ -325,8 +388,11 @@ void BlockManager::FallDown(vvb& matrix, Point& point, int& score)
 		{
 			CheckMatrix(matrix, point, score);
 
-			point = { 4,0 };
+			ResetPoint(point);
 			ChangeBlock();
+
+			//착지 지점 업데이트
+			LandingPointUpdate(matrix, point);
 			return;
 		}
 	}
@@ -352,15 +418,18 @@ void BlockManager::Save(vvb& matrix, Point& point)
 		saveBlock = nowBlock;
 		saveBlockKind = blockKind;
 		saveBlockIndex = blockIndex;
-		saveBlockColor = COLOR(blockOlder[blockOlderIndex] + (int)COLOR::BLUE);
+		saveBlockColor = blockColor;
 
 		saveBlockData = { saveBlock ,saveBlockColor };
 
 		//원 위치로 옮긴 뒤
-		point = { 4,0 };
+		ResetPoint(point);
 
 		//다음 블록을 받는다.
 		ChangeBlock();
+
+		//착지 지점을 다시 받는다.
+		LandingPointUpdate(matrix, point);
 	}
 
 	else
@@ -381,7 +450,10 @@ void BlockManager::Save(vvb& matrix, Point& point)
 		BlockUpdate(blockKind, blockIndex);
 
 		//원 위치로 옮긴다.
-		point = { 4,0 };
+		ResetPoint(point);
+
+		//착지 지점을 다시 받는다.
+		LandingPointUpdate(matrix, point);
 	}
 }
 
@@ -516,6 +588,8 @@ void BlockManager::ChangeBlock()
 		blockOlderIndex = 0;
 
 	BlockUpdate(BlockKind(blockOlder[blockOlderIndex]), 0);
+
+	//LandingPointUpdate()
 
 	blockColor = COLOR(blockOlder[blockOlderIndex] + (int)COLOR::BLUE);
 }

@@ -18,6 +18,7 @@ public:
 
 	int blockOlder[7]{ 0,1,2,3,4,5,6 };
 	int blockOlderIndex = 0;
+
 	COLOR blockColor, saveBlockColor;
 
 	pointVector nowBlock, nextBlock, saveBlock;
@@ -28,8 +29,10 @@ public:
 
 	BlockData nextBlockData, saveBlockData;
 
+	std::unordered_map <Point, int, std::hash<Point>> landingMap;
+
 	//function
-	void Init();
+	void Init(const vvb& matrix, Point& point);
 	void BlockMapInit();
 	void Shuffle();
 
@@ -37,6 +40,9 @@ public:
 
 	void ApplyToMatrix(vvb& matrix, const Point& point);
 	void RemoveBlock(vvb& matrix, const Point& point);
+
+	void ResetPoint(Point& point);
+	void LandingPointUpdate(const vvb& matrix, const Point& point);
 
 	void Move(const char& arrow, vvb& matrix, Point& point);
 	void Rotate(const char& command, vvb& matrix, const Point& point);
