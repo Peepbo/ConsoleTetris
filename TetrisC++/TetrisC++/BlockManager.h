@@ -10,6 +10,11 @@ public:
 		I, L, J, T, O, S, Z
 	};
 
+	enum class LineKind
+	{
+		EMPTY, NOT_EMPTY, FULL
+	};
+public:
 	//variable
 	std::unordered_map < std::string, pointVector> blockMap;
 	std::unordered_map < BlockKind, int> maxIndexMap;
@@ -31,7 +36,7 @@ public:
 
 	std::unordered_map <Point, int, std::hash<Point>> landingMap;
 	int landingCount = 0;
-
+public:
 	//function
 	void Init(const vvb& matrix, Point& point);
 	void BlockMapInit();
@@ -59,5 +64,6 @@ public:
 
 	void ChangeBlock();
 	void CheckMatrix(vvb& matrix, const Point& point, int& score);
+	bool CheckLine(const vvb& matrix, const int& line, const LineKind& checkKind);
 };
 

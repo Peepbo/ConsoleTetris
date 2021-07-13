@@ -583,67 +583,73 @@ void BlockManager::CheckMatrix(vvb& matrix, const Point& point, int& score)
 		bottomY = std::max(bottomY, ptr.y + point.y);
 	}
 
-	for (int y = topY; y <= bottomY; y++)
+	//맨 아랫줄 부터 검사, 점점 위로 올라가면서 검사
+	for (int y = bottomY; y >= topY; y--)
 	{
-		bool isClear = true;
-		for (int x = 0; x < X_SIZE; x++)
+		if (CheckLine(matrix, y, LineKind::FULL))//해당 줄이 FULL이야?
 		{
-			if (matrix[y][x].value == 0)
-			{
-				isClear = false;
-				break;
-			}
-		}
-
-		if (isClear)
-		{
-			score++;
-
-			//위 matrix에 블록이 있으면 한칸씩 다 내려와야 한다.
+			//다 지우고
 			for (int x = 0; x < X_SIZE; x++)
 			{
 				matrix[y][x].value = 0;
 			}
 
-			//일단 위가 비었는지 안비었는지 확인해야 한다.
-			bool isEmpty = false;
-			int tempY = y, targetY = y - 1; //지워진 줄 바로 위
+			//위 좌표 저장
+			int upY = y - 1;
+			int nowY = y;
 
-			while (!isEmpty)
+			//안비워져 있을 때 반복
+			while (CheckLine(matrix, upY, LineKind::NOT_EMPTY))
 			{
-				for (; targetY >= 0; targetY--,tempY--)
+				//안비워져있다면 위에 블록을 아래로 옮긴다.
+				for (int x = 0; x < X_SIZE; x++)
 				{
-					isEmpty = true;
-
-					for (int x = 0; x < X_SIZE; x++)
-					{
-						if (matrix[targetY][x].value == 1)
-						{
-							isEmpty = false;
-							break;
-						}
-					}
-
-					if (isEmpty)
-					{
-						//계속 위에있는 블록들을 아래로 복제했기 때문에 위가 비워졌을 경우
-						//맨위의 블록과 그 아래 줄 블록이 똑같은 모양일것이다.(맨위를 지워야함)
-						//고로 맨 위를 지워서 한칸씩 내려간 효과를 준다.
-
-						for (int x = 0; x < X_SIZE; x++)
-						{
-							matrix[tempY][x].value = 0;
-						}
-
-						break;
-					}
-
-					for (int x = 0; x < X_SIZE; x++)
-					{
-						matrix[tempY][x] = matrix[targetY][x];
-					}
+					matrix[nowY][x] = matrix[upY][x];
 				}
+
+				upY--;
+				nowY--;
+			}
+
+			//비워져 있으면?
+			//가장 윗줄을 지운다.
+			for (int x = 0; x < X_SIZE; x++)
+			{
+				matrix[nowY][x].value = 0;
 			}
 		}
+
+		//다시 현재 줄 검사
+		if (CheckLine(matrix, y, LineKind::FULL))
+			y++; //꽉차있으면 다시 해당 줄 검사 시작
+	}
+}
+
+bool BlockManager::CheckLine(const vvb& matrix, const int& line, const LineKind& checkKind)
+{
+	for (int x = 0; x < X_SIZE; x++)
+	{
+		if (matrix[line][x].value == 1)
+		{
+			if (checkKind == LineKind::EMPTY)
+				return false;
+			if (checkKind == LineKind::NOT_EMPTY)
+				return true;
+		}
+		else
+		{
+			if (checkKind == LineKind::FULL)
+				return false;
+		}
+	}
+
+	switch (checkKind)
+	{
+	case LineKind::EMPTY:
+		return true;
+	case LineKind::NOT_EMPTY:
+		return false;
+	case LineKind::FULL:
+		return true;
 	}
 }
