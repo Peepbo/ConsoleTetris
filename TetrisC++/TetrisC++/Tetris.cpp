@@ -9,7 +9,7 @@ void Tetris::Start()
 	draw.SetWindowSize(235, 475);
 	draw.ShowConsoleCursor(false);
 	InitMatrix();
-	blockMng.Init();
+	blockMng.Init(matrix, point);
 	keyMng.Init();
 }
 
@@ -24,7 +24,7 @@ void Tetris::Update()
 
 		blockMng.ApplyToMatrix(matrix, point);
 
-		draw.Display(matrix, checkTime, score, blockMng.nextBlockData, blockMng.saveBlockData);
+		draw.Display(matrix, checkTime, score, blockMng.nextBlockData, blockMng.saveBlockData, blockMng.landingMap);
 		draw.ClearScreen();
 	}
 }
