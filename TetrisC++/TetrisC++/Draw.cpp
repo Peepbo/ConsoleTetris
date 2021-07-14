@@ -115,11 +115,7 @@ void Draw::Display(const vvb& matrix, const float& time, const int& score,
 			}
 
 			else if (landingMap.find({ x,y }) != landingMap.end())
-			{
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (int)COLOR::DARK_GRAY);
 				std::cout << "бс";
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (int)COLOR::GRAY);
-			}
 
 			else if (matrix[y][x].value == 0)
 				std::cout << "бр";
