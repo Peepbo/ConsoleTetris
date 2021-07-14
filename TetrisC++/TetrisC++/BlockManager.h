@@ -37,7 +37,7 @@ public:
 	std::unordered_map <Point, int, std::hash<Point>> landingMap;
 	int landingCount = 0;
 
-	bool isSave;
+	bool isSave, *isSurvival;
 public:
 	//function
 	void Init(const vvb& matrix, Point& point);
@@ -64,6 +64,7 @@ public:
 	void BlockUpdate(const BlockKind& kind, const int& index);
 	void CollisionBlockUpdate();
 
+	void SurvivalCheck(const vvb& matrix);
 	void ChangeBlock();
 	void CheckMatrix(vvb& matrix, const Point& point, int& score);
 	bool CheckLine(const vvb& matrix, const int& line, const LineKind& checkKind);

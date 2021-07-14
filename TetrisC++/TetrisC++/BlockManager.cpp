@@ -14,6 +14,8 @@ void BlockManager::Init(const vvb& matrix,Point& point)
 	ResetPoint(point);
 
 	LandingPointUpdate(matrix, point);
+
+	saveBlockData = {};
 }
 
 void BlockManager::BlockMapInit()
@@ -174,7 +176,15 @@ void BlockManager::LandingPointUpdate(const vvb& matrix, const Point& point)
 
 	while (!isLand && !isBlock)
 	{
-		if (landingY + 1 > Y_SIZE - 1)return;
+		if (landingY + 1 > Y_SIZE - 1)
+		{
+			for (const Point& ptr : nowBlock)
+			{
+				landingMap[{ptr.x + point.x, ptr.y + landingY}] = 1;
+		 	} 
+
+			return;
+		}
 
 		landingY++;
 		
@@ -320,8 +330,17 @@ void BlockManager::QuickDown(vvb& matrix, Point& point, int& score, float& time)
 {
 	time = 0;
 
-	//원래 자리에 있던 블록을 지우고
-	RemoveBlock(matrix, point);
+	//이미 내 위치가 착지 지점인지 검사
+	int sameCount = 0;
+	for (const auto& it : landingMap)
+	{
+		if (matrix[it.first.y][it.first.x].value == 1)
+			sameCount++;
+	}
+
+	//착지 지점이랑 내 블록 위치랑 같지 않을때만 삭제
+	if(sameCount != 4)
+		RemoveBlock(matrix, point); //원래 자리에 있던 블록을 지우고
 
 	//착지 위치에 블록을 생성
 	for (const auto& it : landingMap)
@@ -340,6 +359,8 @@ void BlockManager::QuickDown(vvb& matrix, Point& point, int& score, float& time)
 
 	//착지 지점 업데이트
 	LandingPointUpdate(matrix, point);
+
+	SurvivalCheck(matrix);
 }
 
 void BlockManager::FallDown(vvb& matrix, Point& point, int& score)
@@ -355,6 +376,8 @@ void BlockManager::FallDown(vvb& matrix, Point& point, int& score)
 
 			//착지 지점 업데이트
 			LandingPointUpdate(matrix, point);
+
+			SurvivalCheck(matrix);
 			return;
 		}
 
@@ -367,6 +390,8 @@ void BlockManager::FallDown(vvb& matrix, Point& point, int& score)
 
 			//착지 지점 업데이트
 			LandingPointUpdate(matrix, point);
+
+			SurvivalCheck(matrix);
 			return;
 		}
 	}
@@ -406,6 +431,8 @@ void BlockManager::Save(vvb& matrix, Point& point)
 
 		//착지 지점을 다시 받는다.
 		LandingPointUpdate(matrix, point);
+
+		SurvivalCheck(matrix);
 	}
 
 	else
@@ -434,6 +461,8 @@ void BlockManager::Save(vvb& matrix, Point& point)
 
 		//착지 지점을 다시 받는다.
 		LandingPointUpdate(matrix, point);
+
+		SurvivalCheck(matrix);
 	}
 }
 
@@ -560,6 +589,20 @@ void BlockManager::CollisionBlockUpdate()
 	}
 }
 
+void BlockManager::SurvivalCheck(const vvb& matrix)
+{
+	//matrix와 겹치면 종료
+	for (const Point& ptr : nowBlock)
+	{
+		//{4,0}
+		if (matrix[ptr.y + 0][ptr.x + 4].value == 1)
+		{
+			*isSurvival = false;
+			break;
+		}
+	}
+}
+
 void BlockManager::ChangeBlock()
 {
 	isSave = false;
@@ -594,6 +637,9 @@ void BlockManager::CheckMatrix(vvb& matrix, const Point& point, int& score)
 	{
 		if (CheckLine(matrix, y, LineKind::FULL))//해당 줄이 FULL이야?
 		{
+			//점수를 올리고
+			score++;
+
 			//다 지우고
 			for (int x = 0; x < X_SIZE; x++)
 			{
@@ -656,6 +702,8 @@ bool BlockManager::CheckLine(const vvb& matrix, const int& line, const LineKind&
 	case LineKind::NOT_EMPTY:
 		return false;
 	case LineKind::FULL:
+		return true;
+	default:
 		return true;
 	}
 }
