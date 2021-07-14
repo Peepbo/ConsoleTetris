@@ -2,7 +2,7 @@
 #include "conio.h"
 #include "Key.h"
 
-#include <windows.h>
+#include <vector>
 
 void Tetris::Start()
 {
@@ -10,6 +10,7 @@ void Tetris::Start()
 	draw.ShowConsoleCursor(false);
 	InitMatrix();
 	blockMng.Init(matrix, point);
+	blockMng.isSurvival = &isSurvival;
 	keyMng.Init();
 }
 
@@ -17,15 +18,40 @@ void Tetris::Update()
 {
 	while (true)
 	{
-		keyMng.Update();
-		InputKey();
+		if (isSurvival)
+		{
+			keyMng.Update();
+			InputKey();
 
-		NextTime();
+			NextTime();
 
-		blockMng.ApplyToMatrix(matrix, point);
+			blockMng.ApplyToMatrix(matrix, point);
 
-		draw.Display(matrix, checkTime, score, blockMng.nextBlockData, blockMng.saveBlockData, blockMng.landingMap);
-		draw.ClearScreen();
+			draw.Display(matrix, checkTime, score, blockMng.nextBlockData, blockMng.saveBlockData, blockMng.landingMap);
+			draw.ClearScreen();
+		}
+		else
+		{
+			nickName.clear();
+			draw.InputName(nickName);
+			
+			if (rankMng.CheckScore(score))
+			{
+				rankMng.RecordScore("ScoreData.txt", nickName, score);
+				score = 0;
+			}
+
+  			draw.ClearScreen();
+			
+			draw.RankDisplay(rankMng.GetRankData("ScoreData.txt"));
+
+			//restart
+			InitMatrix();
+			isSurvival = true;
+			blockMng.Init(matrix, point);
+
+			draw.ClearScreen();
+		}
 	}
 }
 
@@ -57,13 +83,27 @@ void Tetris::InputKey()
 
 void Tetris::InitMatrix()
 {
-	matrix.assign(Y_SIZE, {});
-
-	for (int i = 0; i < Y_SIZE; i++)
+	if (matrix.empty())
 	{
-		for (int j = 0; j < X_SIZE; j++)
+		matrix.assign(Y_SIZE, {});
+
+		for (int i = 0; i < Y_SIZE; i++)
 		{
-			matrix[i].push_back({ COLOR::GRAY, 0 });
+			for (int j = 0; j < X_SIZE; j++)
+			{
+				matrix[i].push_back({ COLOR::GRAY, 0 });
+			}
+		}
+	}
+
+	else
+	{
+		for (int y = 0; y < Y_SIZE; y++)
+		{
+			for (int x = 0; x < X_SIZE; x++)
+			{
+				matrix[y][x] = { COLOR::GRAY,0 };
+			}
 		}
 	}
 }
