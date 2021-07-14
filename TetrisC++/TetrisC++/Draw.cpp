@@ -124,3 +124,28 @@ void Draw::Display(const vvb& matrix, const float& time, const int& score,
 		std::cout << '\n';
 	}
 }
+
+void Draw::InputName(std::string& nickName)
+{
+	ClearScreen();
+	system("cls");
+	printf("\033[%d;%dH", 0, 0);
+	while (nickName.empty())
+	{
+		std::cout << "\t기록할 닉네임\t\n";
+		std::cin >> nickName;
+	}
+}
+
+void Draw::RankDisplay(const std::vector<std::string>& data)
+{
+	system("cls");
+	data.size();
+
+	for (const std::string& rank : data)
+	{
+		std::cout << rank << '\n';
+	}
+	std::string write;
+	std::cin >> write;
+}
