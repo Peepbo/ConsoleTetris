@@ -36,6 +36,8 @@ public:
 
 	std::unordered_map <Point, int, std::hash<Point>> landingMap;
 	int landingCount = 0;
+
+	bool isSave;
 public:
 	//function
 	void Init(const vvb& matrix, Point& point);

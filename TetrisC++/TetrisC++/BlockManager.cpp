@@ -388,6 +388,8 @@ void BlockManager::Save(vvb& matrix, Point& point)
 
 	if (saveBlock.empty())
 	{
+		isSave = true;
+
 		//블록을 저장하고 
 		saveBlock = nowBlock;
 		saveBlockKind = blockKind;
@@ -408,6 +410,10 @@ void BlockManager::Save(vvb& matrix, Point& point)
 
 	else
 	{
+		if (isSave)return;
+
+		isSave = true;
+
 		//swap()
 		std::swap(saveBlockKind, blockKind);
 		std::swap(saveBlockIndex, blockIndex);
@@ -556,14 +562,14 @@ void BlockManager::CollisionBlockUpdate()
 
 void BlockManager::ChangeBlock()
 {
+	isSave = false;
+
 	if (blockOlderIndex != 6)
 		blockOlderIndex++;
 	else
 		blockOlderIndex = 0;
 
 	BlockUpdate(BlockKind(blockOlder[blockOlderIndex]), 0);
-
-	//LandingPointUpdate()
 
 	blockColor = COLOR(blockOlder[blockOlderIndex] + (int)COLOR::BLUE);
 }
